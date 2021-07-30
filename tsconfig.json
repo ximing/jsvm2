@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": false,
+    "preserveConstEnums": false,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "lib",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "lib": ["es2015"]
+  },
+  "include": ["src"],
+  "exclude": ["__tests__", "node_modules", "lib", "tests", "jest"],
+  "compileOnSave": false
+}
