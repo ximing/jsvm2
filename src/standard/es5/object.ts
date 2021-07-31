@@ -55,7 +55,7 @@ export function ObjectMethod(path: Path<types.ObjectMethod>) {
       ? node.key.name
       : path.visitor(path.createChild(node.key))
     : path.visitor(path.createChild(node.key));
-  const method = function () {
+  const method = function (this: any) {
     stack.enter('Object.' + methodName);
     const args = [].slice.call(arguments);
     const newScope = scope.createChild(ScopeType.Function);

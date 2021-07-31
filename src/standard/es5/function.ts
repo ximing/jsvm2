@@ -22,7 +22,7 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
   const { node, scope, stack } = path;
   // 处理匿名函数
   const functionName = node.id ? node.id.name : '';
-  const func = function (...args) {
+  const func = function (this: any, ...args) {
     stack.enter(functionName);
 
     // 判断是不是构造函数，如果是构造函数要返回一个实例

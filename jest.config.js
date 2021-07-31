@@ -2,7 +2,7 @@ module.exports = {
   preset: 'ts-jest',
   setupFilesAfterEnv: ['./scripts/testSetup.js'],
   testRegex: '\\.test\\.tsx?$',
-  collectCoverage: true,
+  collectCoverage: false,
   testEnvironment: 'node',
   coverageReporters: ['lcovonly', 'text'],
   collectCoverageFrom: ['src/**/*.{ts,tsx}'],

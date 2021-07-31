@@ -76,3 +76,5 @@ config
 
 dist
 debugger_app
+
+lib

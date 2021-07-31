@@ -1,3 +1,6 @@
+![build workflow](https://github.com/ximing/jsvm2/actions/workflows/build.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/ximing/jsvm2/badge.svg?branch=master)](https://coveralls.io/github/ximing/jsvm2?branch=master)
+
 ## Specification
 
 https://tc39.es/ecma262
