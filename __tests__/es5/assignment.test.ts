@@ -10,6 +10,15 @@ describe('assignment spec:', () => {
     ).toEqual(1);
   });
 
+  it('base global', () => {
+    expect(
+      run(`
+      a = 1;
+      module.exports = a;
+    `)
+    ).toEqual(1);
+  });
+
   it('not defined', () => {
     try {
       run(

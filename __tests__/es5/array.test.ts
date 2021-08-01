@@ -29,4 +29,12 @@ module.exports = arr;
   `);
     expect(arr).toEqual([1, 100, undefined, null, 4]);
   });
+
+  it('elements null', () => {
+    const arr = run(`
+  module.exports = [1,,2];
+  `);
+    expect(arr.length).toEqual(3);
+    expect(arr[2]).toEqual(2);
+  });
 });
