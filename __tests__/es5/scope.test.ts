@@ -381,7 +381,7 @@ describe('try catch', function () {
     }catch(err){
       let b = 3;
     }
-    module.exports = {a,b};
+    module.exports = {a,b,c};
 `);
     expect(res).toEqual({ a: 1, b: 2, c: 2 });
   });
@@ -396,7 +396,7 @@ describe('try catch', function () {
     }catch(err){
       const b = 3;
     }
-    module.exports = {a,b};
+    module.exports = {a,b,c};
 `);
     expect(res).toEqual({ a: 1, b: 2, c: 2 });
   });

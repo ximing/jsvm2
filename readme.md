@@ -76,8 +76,8 @@ https://tc39.es/ecma262
 - [ ] YieldExpression
 - [x] ObjectPattern
 - [ ] ArrayPattern
-- [ ] RestElement
-- [ ] AssignmentPattern
+- [x] RestElement
+- [x] AssignmentPattern
 - [ ] ImportDeclaration
 - [ ] ExportNamedDeclaration
 - [ ] ExportDefaultDeclaration

@@ -13,7 +13,7 @@ export class Stack {
   constructor(private limitSize: number = Error.stackTraceLimit || 10) {}
 
   public push(item: IPen) {
-    if (this.size > this.limitSize) {
+    if (this.size >= this.limitSize) {
       this.items.shift();
     }
     this.items.push(item);

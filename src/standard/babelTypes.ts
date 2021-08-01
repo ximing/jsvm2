@@ -1,17 +1,17 @@
 import {
-  ArrayExpression,
   ArrayPattern,
   AssignmentPattern,
-  CallExpression,
-  ClassMethod,
+  // ArrayExpression,
+  // CallExpression,
+  // ClassMethod,
   ClassProperty,
   FunctionDeclaration,
   Identifier,
-  ImportDefaultSpecifier,
-  ImportSpecifier,
+  // ImportDefaultSpecifier,
+  // ImportSpecifier,
+  // ObjectExpression,
   MemberExpression,
   Node,
-  ObjectExpression,
   ObjectPattern,
   ObjectProperty,
   RestElement,
@@ -32,13 +32,13 @@ export function isStringLiteral(node: Node): node is StringLiteral {
   return is(node, 'StringLiteral');
 }
 
-export function isObjectExpression(node: Node): node is ObjectExpression {
-  return is(node, 'ObjectExpression');
-}
-
-export function isArrayExpression(node: Node): node is ArrayExpression {
-  return is(node, 'ArrayExpression');
-}
+// export function isObjectExpression(node: Node): node is ObjectExpression {
+//   return is(node, 'ObjectExpression');
+// }
+//
+// export function isArrayExpression(node: Node): node is ArrayExpression {
+//   return is(node, 'ArrayExpression');
+// }
 
 export function isFunctionDeclaration(node: Node): node is FunctionDeclaration {
   return is(node, 'FunctionDeclaration');
@@ -85,18 +85,18 @@ export function isClassProperty(node: Node): node is ClassProperty {
   return is(node, 'ClassProperty');
 }
 
-export function isClassMethod(node: Node): node is ClassMethod {
-  return is(node, 'ClassMethod');
-}
-
-export function isCallExpression(node: Node): node is CallExpression {
-  return is(node, 'CallExpression');
-}
-
-export function isImportDefaultSpecifier(node: Node): node is ImportDefaultSpecifier {
-  return is(node, 'ImportDefaultSpecifier');
-}
-
-export function isImportSpecifier(node: Node): node is ImportSpecifier {
-  return is(node, 'ImportSpecifier');
-}
+// export function isClassMethod(node: Node): node is ClassMethod {
+//   return is(node, 'ClassMethod');
+// }
+//
+// export function isCallExpression(node: Node): node is CallExpression {
+//   return is(node, 'CallExpression');
+// }
+//
+// export function isImportDefaultSpecifier(node: Node): node is ImportDefaultSpecifier {
+//   return is(node, 'ImportDefaultSpecifier');
+// }
+//
+// export function isImportSpecifier(node: Node): node is ImportSpecifier {
+//   return is(node, 'ImportSpecifier');
+// }
