@@ -1,7 +1,7 @@
 import * as types from '@babel/types';
 import { ScopeType } from '../../types';
 import { Path } from '../../path';
-import { isIdentifier } from '../babelTypes';
+import { isIdentifier, isSpreadElement } from '../babelTypes';
 import { THIS } from '../../constants';
 import { Signal } from '../../signal';
 import { defineFunction } from '../utils';
@@ -16,6 +16,11 @@ export function ObjectExpression(path: Path<types.ObjectExpression>) {
     const tempProperty = property as types.ObjectMethod | types.ObjectProperty;
     if (tempProperty.computed === true) {
       computedProperties.push(tempProperty);
+      continue;
+    }
+    if (isSpreadElement(property)) {
+      const obj = path.visitor(path.createChild(property));
+      Object.assign(object, obj);
       continue;
     }
     path.visitor(path.createChild(property, newScope, { object }));

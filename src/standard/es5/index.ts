@@ -10,7 +10,7 @@ import {
   RegExpLiteral,
   StringLiteral,
 } from './literal';
-import { VariableDeclaration, VariableDeclarator } from './variable';
+import { VariableDeclaration } from './variable';
 import { BinaryExpression } from './binaryExpression';
 import { ObjectExpression, ObjectMethod, ObjectProperty } from './object';
 import { AssignmentExpression } from './assignmentExpression';
@@ -48,7 +48,6 @@ export default {
   BooleanLiteral,
   NullLiteral,
   VariableDeclaration,
-  VariableDeclarator,
   ArrayExpression,
   BinaryExpression,
   ObjectExpression,

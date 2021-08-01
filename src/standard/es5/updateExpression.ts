@@ -7,19 +7,19 @@ import { Kind } from '../../var';
 // ++argument or argument++ Increments or decrements a number.
 
 // https://www.w3school.com.cn/js/pro_js_operators_unary.asp
+// https://doc.esdoc.org/github.com/mason-lang/esast/class/src/ast.js~UpdateExpression.html
 export function UpdateExpression(path: Path<t.UnaryExpression>) {
   const { node, scope, stack } = path;
-  const { prefix } = node;
+  const { prefix, argument } = node;
   let $var: any;
-  if (isIdentifier(node.argument)) {
-    const { name } = node.argument;
+  if (isIdentifier(argument)) {
+    const { name } = argument;
     const $$var = scope.hasBinding(name);
     if (!$$var) {
-      throw overrideStack(ErrNotDefined(name), stack, node.argument);
+      throw overrideStack(ErrNotDefined(name), stack, argument);
     }
     $var = $$var;
-  } else if (isMemberExpression(node.argument)) {
-    const argument = node.argument;
+  } else if (isMemberExpression(argument)) {
     const object = path.visitor(path.createChild(argument.object));
     const property = argument.computed
       ? path.visitor(path.createChild(argument.property))

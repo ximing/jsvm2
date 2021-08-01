@@ -1,7 +1,7 @@
 import { ErrNotDefined } from '../../src/error';
 import { run } from '../helper';
 
-describe('hoisting spec:', () => {
+describe('es2015 hoisting spec:', () => {
   // https://developer.mozilla.org/zh-CN/docs/Glossary/Hoisting
   it('let should not Hoisting', function () {
     expect(() =>

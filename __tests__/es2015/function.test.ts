@@ -1,6 +1,6 @@
 import { run } from '../helper';
 
-describe('function spec:', () => {
+describe('es2015 function spec:', () => {
   it('new.target without new', function () {
     expect(
       run(`function Human(){ return new.target; }
