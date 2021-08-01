@@ -1,5 +1,7 @@
 ![build workflow](https://github.com/ximing/jsvm2/actions/workflows/build.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/ximing/jsvm2/badge.svg?branch=master)](https://coveralls.io/github/ximing/jsvm2?branch=master)
+![NPM](https://img.shields.io/npm/l/jsvm2?style=flat-square)
+![npm bundle size](https://img.shields.io/bundlephobia/min/jsvm2?style=flat-square)
 
 ## Specification
 

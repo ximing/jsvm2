@@ -103,5 +103,12 @@
   },
   "dependencies": {
     "acorn": "^8.4.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=10"
   }
 }
