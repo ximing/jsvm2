@@ -1,0 +1,75 @@
+num = 6;
+var num;
+var num2 = null;
+let num1 = 6;
+console.log("hello world")
+console["log"]("123");
+var a = {};
+a.x = a = {n: 2};
+var a = num1++;
+var obj = {attr1:1,attr2:2};
+var {arrt1,arrt2} = obj;
+const obj3 = {a:1,b:2};
+const obj4 = {...obj3,c:3};
+delete obj3.a;
+delete obj3['b'];
+if(true){
+	const a = 1;
+}
+a("1")
+a.apply(this,["123"])
+var fn = (...obj) => {};
+var fn = function(a = '1'){
+	return 1;
+}
+
+function Man(){
+}
+
+Man.prototype = {
+  say: function(){
+  }
+};
+
+{}
+var f = {
+  a(){},
+  c : ()=>{},
+  b:1
+}
+
+
+try{}catch(err){}
+
+if(a){
+}else if(b){}
+else{}
+
+var s = (1,2,3);
+const arr = [1, 2, 3];
+const arr2 = [...arr, 4,5,6]
+var arr11 = [1,{},null,undefined,false,...b];
+
+var a = 0;
+for(let i = 0; i<5; i++){
+	if(i == 2) continue;
+    a++;
+}
+
+
+function Human(){
+	this.name = 'ximing'
+}
+Human.prototype.say = function(){}
+{human: new Human(), Human};
+
+
+function Human1(){ return new.target}
+
+class A{
+  	constructor(){
+    	this.a = 1;
+    }
+	b(){}
+	c = ()=>{}
+}
