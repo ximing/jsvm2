@@ -355,3 +355,63 @@ describe('for', () => {
     ).toThrowError(ErrDuplicateDeclare('a').message);
   });
 });
+
+describe('try catch', function () {
+  it('try catch var scope', function () {
+    const res = run(`
+    var a = 1,b=2;
+    try{
+      var a = 2
+      throw a;
+    }catch(err){
+      var b = 3;
+    }
+    module.exports = {a,b};
+`);
+    expect(res).toEqual({ a: 2, b: 3 });
+  });
+
+  it('try catch let scope', function () {
+    const res = run(`
+    var a = 1,b=2,c = 3;
+    try{
+      let a = 2
+      c = a;
+      throw a;
+    }catch(err){
+      let b = 3;
+    }
+    module.exports = {a,b};
+`);
+    expect(res).toEqual({ a: 1, b: 2, c: 2 });
+  });
+
+  it('try catch let scope', function () {
+    const res = run(`
+    var a = 1,b=2,c = 3;
+    try{
+      const a = 2
+      c = a;
+      throw a;
+    }catch(err){
+      const b = 3;
+    }
+    module.exports = {a,b};
+`);
+    expect(res).toEqual({ a: 1, b: 2, c: 2 });
+  });
+
+  it('duplicate declare ', function () {
+    expect(() =>
+      run(`
+        const a = 1;
+        try{
+          var a = 2;
+        }catch(err){
+          throw err;
+        }
+        module.exports = {a: a};
+`)
+    ).toThrowError(ErrDuplicateDeclare('a').message);
+  });
+});
