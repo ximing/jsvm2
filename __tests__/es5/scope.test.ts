@@ -1,14 +1,159 @@
 import { run } from '../helper';
 import { ErrDuplicateDeclare } from '../../src/error';
+import { ScopeType } from '../../src/types';
+import { Scope } from '../../src/scope';
+import { Context } from '../../src';
 
 describe('for scope spec:', () => {
-  it('base', () => {
+  it('base root', function () {
+    const scope = new Scope(ScopeType.Root, null);
+    expect(scope.type).toEqual(ScopeType.Root);
+    expect(scope.level).toEqual(0);
+    expect(scope.parent).toEqual(null);
+    expect(scope.isolated).toBeTruthy();
+    expect(scope.invasive).toBeFalsy();
+    expect(scope.data).toEqual({});
+  });
+
+  it('hasOwnBinding', () => {
+    const scope = new Scope(ScopeType.Root, null);
+    scope.setContext(new Context());
+    expect(!!scope.hasOwnBinding('console')).toBeTruthy();
+  });
+
+  it('hasBinding', () => {
+    const scope = new Scope(ScopeType.Root, null);
+    expect(scope.declareVar('name', 'ximing')).toBeTruthy();
+
+    const child = scope.createChild(ScopeType.Block);
+
+    // can not found the var in the current scope
+    expect(child.hasOwnBinding('name')).toEqual(undefined);
+
+    // can found the var in the parent scope
+    expect(!!child.hasBinding('name')).toEqual(true);
+  });
+
+  it("'var' can be redeclare", () => {
+    const scope = new Scope(ScopeType.Root, null);
+    expect(scope.declareVar('name', 'ximing')).toBeTruthy();
+
+    const $var: any = scope.hasOwnBinding('name');
+
+    expect($var.value).toEqual('ximing');
+
+    expect(scope.declareVar('name', 'hello')).toBeTruthy(); // redeclare
+
+    const $newVar: any = scope.hasOwnBinding('name');
+
+    expect($var.value).toEqual('ximing');
+    expect($newVar.value).toEqual('hello');
+  });
+
+  it(`let can't be redeclare`, () => {
+    const scope = new Scope(ScopeType.Root, null);
+    expect(scope.declareVar('name', 'ximing')).toBeTruthy();
+
+    const $var: any = scope.hasOwnBinding('name');
+
+    expect($var.value).toEqual('ximing');
+
+    expect(() => {
+      scope.declareLet('name', 'hello'); // redeclare
+    }).toThrowError(ErrDuplicateDeclare('name').message);
+  });
+
+  it(`const can't be redeclare`, () => {
+    const scope = new Scope(ScopeType.Root, null);
+    scope.declareVar('name', 'ximing');
+    const $var: any = scope.hasOwnBinding('name');
+
+    expect($var.value).toEqual('ximing');
+
+    expect(() => {
+      scope.declareConst('name', 'hello'); // redeclare
+    }).toThrowError(ErrDuplicateDeclare('name').message);
+  });
+
+  it('delete variable from a scope', () => {
+    const scope = new Scope(ScopeType.Root, null);
+    scope.declareVar('name', 'ximing');
+    const $var: any = scope.hasOwnBinding('name');
+    expect($var.value).toEqual('ximing');
+    expect(scope.del('name')).toBeTruthy();
+
+    expect(scope.hasOwnBinding('name')).toEqual(undefined);
+  });
+
+  it('locate scope', () => {
+    const scope = new Scope(ScopeType.Root, null);
+    scope.declareVar('name', 'ximing');
+    const child = scope.createChild(ScopeType.Block);
+    const childChild = child.createChild(ScopeType.Block);
+    const target = childChild.locate('name');
+
+    expect(target === scope).toBeTruthy();
+
+    expect(childChild.locate('customerVarName')).toEqual(undefined);
+  });
+
+  it('hoisting', () => {
     const res = run(`
       for(var i =0;i<5;i++){
       }
       module.exports = i;
     `);
     expect(res).toEqual(5);
+  });
+});
+
+describe('function', function () {
+  it(`function have it's own scope with var`, function () {
+    const res = run(`
+    var a = 1;
+    function get(){
+      var a = 2;
+      return a;
+    }
+    function getA(){
+      return a;
+    }
+    module.exports = {get: get, getA: getA};
+`);
+    expect(res.get()).toEqual(2);
+    expect(res.getA()).toEqual(1);
+  });
+
+  it(`function have it's own scope with let`, function () {
+    const res = run(`
+    var a = 1;
+    function get(){
+      let a = 2;
+      return a;
+    }
+    function getA(){
+      return a;
+    }
+    module.exports = {get: get, getA: getA};
+`);
+    expect(res.get()).toEqual(2);
+    expect(res.getA()).toEqual(1);
+  });
+
+  it(`function have it's own scope with const`, function () {
+    const res = run(`
+    var a = 1;
+    function get(){
+      const a = 2;
+      return a;
+    }
+    function getA(){
+      return a;
+    }
+    module.exports = {get: get, getA: getA};
+`);
+    expect(res.get()).toEqual(2);
+    expect(res.getA()).toEqual(1);
   });
 });
 

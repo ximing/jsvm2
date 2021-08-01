@@ -20,3 +20,46 @@ describe('literal spec:', () => {
     });
   });
 });
+
+describe('reg', function () {
+  it('basic without flags', () => {
+    const fn = run(`
+      const reg = /^hello/;
+      function isSayHi(word) {
+        return reg.test(word);
+      }
+      module.exports = isSayHi;
+  `);
+
+    expect(fn('hello world')).toBeTruthy();
+    expect(fn('abcd')).toBeFalsy();
+  });
+
+  it('with flags', () => {
+    const fn = run(`
+      const reg = /^hello/i;
+      function isSayHi(word) {
+        return reg.test(word);
+      }
+      module.exports = isSayHi;
+  `);
+    expect(fn('hello world')).toBeTruthy();
+    expect(fn('Hello woRld')).toBeTruthy();
+  });
+
+  it('with multiple flags', () => {
+    const fn = run(
+      `
+        const reg = /^hello/im;
+        function isSayHi(word) {
+          return reg.test(word);
+        }
+        module.exports = isSayHi;
+  `
+    );
+
+    expect(fn('hello world')).toBeTruthy();
+    expect(fn('Hello woRld')).toBeTruthy();
+    expect(fn('Hello \nwoRld')).toBeTruthy();
+  });
+});

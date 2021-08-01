@@ -124,6 +124,111 @@ describe('while statement spec:', () => {
   });
 });
 
-describe('do while statement spec:', () => {});
+describe('do while statement spec:', () => {
+  it('break', function () {
+    expect(
+      run(`
+    var a = 1;
+    doLoop:
+    do {
+      a++;
+      break doLoop;
+    } while (true);
+    module.exports = a;
+    `)
+    ).toEqual(2);
+  });
 
-describe('for in statement spec:', () => {});
+  it('continue', function () {
+    expect(run(`
+      var a = 1;
+      doLoop:
+      do {
+        a++;
+        continue doLoop;
+      } while (a<10);
+      module.exports = a;
+    `)).toEqual(10)
+  });
+});
+
+describe('for in statement spec:', () => {
+  it('break', function () {
+    expect(
+      run(`
+    var obj = {
+      1: false,
+      2: false,
+      3: false
+    };
+    loop1:
+    for (var attr in obj) {
+      obj[attr] = true;
+      if (attr % 2 === 0){
+        break loop1;
+      }
+    }
+    module.exports = obj;
+`)
+    ).toEqual({
+      1: true,
+      2: true,
+      3: false,
+    });
+  });
+
+  it('break 2', function () {
+    expect(
+      run(`
+    var obj = {
+      1: false,
+      2: false,
+      3: false
+    };
+    loop1:
+    for (var attr in obj) {
+      obj[attr] = true;
+      loop2:
+      for (var index in [1,2,3,4]){
+        if ((index + 1)%3 === 0){
+          break loop1;
+        }
+      }
+    }
+    module.exports = {attr, index};
+    `)
+    ).toEqual({ attr: '1', index: '2' });
+  });
+  it('continue', function () {
+    expect(
+      run(`
+      var obj = {
+        1: false,
+        2: false,
+        3: false
+      };
+      loop1:
+      for (var attr in obj) {
+        obj[attr] = true;
+        loop2:
+        for (var index in [1,2,3,4]){
+          if ((index + 1)%3 === 0){
+            break loop1;
+          }
+          loop3:
+          for (var m in [1, 2, 3, 4]){
+            if ((m + 1) % 2 === 0){
+              continue loop2;
+            }
+          }
+        }
+      }
+      module.exports = {attr, index,m};
+    `)
+    ).toEqual({
+      attr: '1',
+      index: '2',
+      m: '3',
+    });
+  });
+});

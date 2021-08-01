@@ -58,6 +58,24 @@ describe('function spec:', () => {
     expect(obj.sub.name).toEqual('');
   });
 
+  it('assignmentPattern function', function () {
+    expect(
+      run(`
+      function fn (name = 'ximing'){ return name;}
+      module.exports = fn();
+    `)
+    ).toEqual('ximing');
+  });
+
+  it('assignmentPattern function call', function () {
+    expect(
+      run(`
+      function fn (name = 'ximing'){ return name;}
+      module.exports = fn;
+    `)()
+    ).toEqual('ximing');
+  });
+
   it('invalid function call', function () {
     expect(() =>
       run(`

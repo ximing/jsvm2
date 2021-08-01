@@ -10,6 +10,16 @@ describe('assignment spec:', () => {
     ).toEqual(1);
   });
 
+  it('base logicalExpression', () => {
+    expect(
+      run(`
+      var a = 0 || 1;
+      var b = 0 && 1;
+      module.exports = {a,b};
+    `)
+    ).toEqual({ a: 1, b: 0 });
+  });
+
   it('base global', () => {
     expect(
       run(`
