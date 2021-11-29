@@ -16,7 +16,16 @@ export function DebuggerStatement() {
 
 export function LabeledStatement(path: Path<t.LabeledStatement>) {
   const label = path.node.label as t.Identifier;
-  return path.visitor(path.createChild(path.node.body, path.scope, { labelName: label.name }));
+  const signal = path.visitor(
+    path.createChild(path.node.body, path.scope, { labelName: label.name })
+  );
+  // if (Signal.isBreak(signal) || Signal.isContinue(signal) || Signal.isReturn(signal)) return signal;
+  return signal;
+  // console.log(signal);
+  // if (Signal.isBreak(signal) && signal.value === label.name) {
+  //   console.log('0000000000000000')
+  // } else {
+  // }
 }
 
 export function EmptyStatement() {}
@@ -67,7 +76,15 @@ export function BlockStatement(path: Path<t.BlockStatement>) {
   let tempResult;
   for (const node of block.body) {
     const result = (tempResult = path.visitor(path.createChild(node, blockScope)));
+    // if (node.type === 'LabeledStatement') {
+    //   console.log('result', result);
+    //   return result
+    // }
     if (result instanceof Signal) {
+      console.log('result', result);
+      return result;
+    }
+    if (Signal.isReturn(result)) {
       return result;
     }
   }

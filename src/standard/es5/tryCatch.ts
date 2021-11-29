@@ -1,6 +1,7 @@
 import * as t from '@babel/types';
 import { ScopeType } from '../../types';
 import { Path } from '../../path';
+import { Signal } from '../../signal';
 
 export function ThrowStatement(path: Path<t.ThrowStatement>) {
   // TODO: rewrite the stack log
@@ -19,18 +20,26 @@ export function TryStatement(path: Path<t.TryStatement>) {
     tryScope.isolated = false;
     return path.visitor(path.createChild(node.block, tryScope));
   } catch (err) {
-    const param = node.handler!.param as t.Identifier;
-    const catchScope = scope.createChild(ScopeType.Catch);
-    catchScope.invasive = true;
-    catchScope.isolated = false;
-    catchScope.declareConst(param.name, err);
-    return path.visitor(path.createChild(node.handler!, catchScope));
+    if (node.handler) {
+      const param = node.handler!.param as t.Identifier;
+      const catchScope = scope.createChild(ScopeType.Catch);
+      catchScope.invasive = true;
+      catchScope.isolated = false;
+      catchScope.declareConst(param.name, err);
+      return path.visitor(path.createChild(node.handler!, catchScope));
+    } else {
+      throw err;
+    }
   } finally {
     if (node.finalizer) {
       const finallyScope = scope.createChild(ScopeType.Finally);
       finallyScope.invasive = true;
       finallyScope.isolated = false;
-      return path.visitor(path.createChild(node.finalizer, finallyScope));
+      const single = path.visitor(path.createChild(node.finalizer, finallyScope));
+      // return single;
+      if (Signal.isReturn(single)) {
+        return single;
+      }
     }
   }
 }
