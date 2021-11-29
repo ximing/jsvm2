@@ -15,7 +15,11 @@ import { ScopeType, presetMap } from './types';
  * @param {Context} context
  * @returns
  */
-export function runInContext(code: string, context?: Context, preset: presetMap = presetMap.env) {
+export function runInContext(
+  code: string | any,
+  context?: Context,
+  preset: presetMap = presetMap.env
+) {
   const scope = new Scope(ScopeType.Root, null);
   scope.level = 0;
   scope.invasive = true;
@@ -27,20 +31,21 @@ export function runInContext(code: string, context?: Context, preset: presetMap 
   const $module = { exports: $exports };
   scope.declareConst(MODULE, $module);
   scope.declareVar(EXPORTS, $exports);
-
-  const ast = parse(code, {
-    sourceType: 'module',
-    plugins: [
-      'asyncGenerators',
-      'classProperties',
-      'decorators-legacy',
-      'doExpressions',
-      'exportDefaultFrom',
-      'flow',
-      'objectRestSpread',
-    ],
-  });
-
+  let ast: any = code;
+  if (typeof code === 'string') {
+    ast = parse(code, {
+      sourceType: 'module',
+      plugins: [
+        'asyncGenerators',
+        'classProperties',
+        'decorators-legacy',
+        'doExpressions',
+        'exportDefaultFrom',
+        'flow',
+        'objectRestSpread',
+      ],
+    });
+  }
   const path = new Path(ast, null, scope, {}, new Stack());
   path.preset = preset;
   path.visitor = visitor;

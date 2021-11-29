@@ -3,6 +3,7 @@ import * as t from '@babel/types';
 import { Path } from '../../path';
 import { ScopeType } from '../../types';
 import { Signal } from '../../signal';
+import { isIdentifier } from '../babelTypes';
 
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Loops_and_iteration
 export function ForStatement(path: Path<t.ForStatement>) {
@@ -129,16 +130,24 @@ export function WhileStatement(path: Path<t.WhileStatement>) {
   }
 }
 
+// for (w in g){} 也是被允许的  react构建出的dist大量应用
 export function ForInStatement(path: Path<t.ForInStatement>) {
   const { node, scope, ctx } = path;
-  const kind = (node.left as t.VariableDeclaration).kind;
-  const decl = (node.left as t.VariableDeclaration).declarations[0];
-  const name = (decl.id as t.Identifier).name;
+
+  let kind;
+  let name;
+  if (isIdentifier(node.left)) {
+    kind = 'var';
+    name = node.left.name;
+  } else {
+    kind = (node.left as t.VariableDeclaration).kind;
+    let decl = (node.left as t.VariableDeclaration).declarations[0];
+    name = (decl.id as t.Identifier).name;
+  }
 
   const labelName: string = ctx.labelName;
 
   const right = path.visitor(path.createChild(node.right));
-
   for (const value in right) {
     if (Object.hasOwnProperty.call(right, value)) {
       const forInScope = scope.createChild(ScopeType.ForIn);

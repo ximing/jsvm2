@@ -8,6 +8,7 @@ import { ANONYMOUS, THIS } from '../../constants';
 // console.log("123")
 // console['log']("123")
 // log("12")
+// Object.prototype.hasOwnProperty.call(g, w)
 export function CallExpression(path: Path<t.CallExpression>) {
   const { node, scope, stack } = path;
   const functionName: string = isMemberExpression(node.callee)
@@ -53,9 +54,17 @@ export function CallExpression(path: Path<t.CallExpression>) {
     const thisVar = scope.hasBinding(THIS);
     context = thisVar ? thisVar.value : null;
   }
-  const result = func.apply(context, args);
-  if (result instanceof Error) {
-    result.stack = result.toString() + '\n' + stack.raw;
+  if (functionName === 'Ya.call') {
+    console.log('===>', func === Function.prototype.call);
   }
-  return result;
+  try {
+    Object.prototype.hasOwnProperty(context);
+    const result = func.apply(context, args);
+    if (result instanceof Error) {
+      result.stack = result.toString() + '\n' + stack.raw;
+    }
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
 }

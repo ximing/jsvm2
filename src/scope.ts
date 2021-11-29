@@ -3,14 +3,14 @@ import { ErrDuplicateDeclare } from './error';
 import { isolatedScopeMap, ScopeType } from './types';
 import { Kind, KindType, Var } from './var';
 
-type ScopeData = {
-  [prop: string]: any;
-  [prop: number]: any;
-};
+// type ScopeData = {
+//   [prop: string]: any;
+//   [prop: number]: any;
+// };
 
 export class Scope {
   readonly parent: Scope | null;
-  readonly data: ScopeData;
+  readonly data: Map<string | number, any>;
   readonly name: string | undefined | symbol;
 
   public invasive = false; // 变量提升的时候使用
@@ -25,7 +25,7 @@ export class Scope {
   ) {
     this.name = name;
     this.parent = parent;
-    this.data = {};
+    this.data = new Map();
     this.context = new Context();
   }
 
@@ -49,16 +49,18 @@ export class Scope {
   }
 
   public declareLet(varName: string, value: any): boolean {
-    if (!this.data.hasOwnProperty(varName)) {
-      this.data[varName] = new Var(Kind.let, varName, value);
+    if (!this.data.has(varName)) {
+      this.data.set(varName, new Var(Kind.let, varName, value));
+      // this.data[varName] = new Var(Kind.let, varName, value);
       return true;
     }
     throw ErrDuplicateDeclare(varName);
   }
 
   public declareConst(varName: string, value: any): boolean {
-    if (!this.data.hasOwnProperty(varName)) {
-      this.data[varName] = new Var(Kind.const, varName, value);
+    if (!this.data.has(varName)) {
+      this.data.set(varName, new Var(Kind.const, varName, value));
+      // this.data[varName] = new Var(Kind.const, varName, value);
       return true;
     }
     throw ErrDuplicateDeclare(varName);
@@ -81,8 +83,8 @@ export class Scope {
       targetScope = targetScope.parent;
     }
 
-    if (targetScope.data.hasOwnProperty(varName)) {
-      const $var = targetScope.data[varName];
+    if (targetScope.data.has(varName)) {
+      const $var = targetScope.data.get(varName);
       if ($var.kind !== Kind.var) {
         // only cover var with var, not const and let
         throw ErrDuplicateDeclare(varName);
@@ -93,12 +95,14 @@ export class Scope {
           // TODO strict mode?
         } else {
           // new var cover the old var
-          targetScope.data[varName] = new Var(Kind.var, varName, value);
+          // targetScope.data[varName] = new Var(Kind.var, varName, value);
+          targetScope.data.set(varName, new Var(Kind.var, varName, value));
         }
       }
     } else {
       // set the new var
-      targetScope.data[varName] = new Var(Kind.var, varName, value);
+      // targetScope.data[varName] = new Var(Kind.var, varName, value);
+      targetScope.data.set(varName, new Var(Kind.var, varName, value));
     }
     return true;
   }
@@ -107,8 +111,8 @@ export class Scope {
    * check the scope have binding a var
    */
   public hasBinding(varName: string): Var<any> | void {
-    if (this.data.hasOwnProperty(varName)) {
-      return this.data[varName];
+    if (this.data.has(varName)) {
+      return this.data.get(varName);
     } else if (this.parent) {
       return this.parent.hasBinding(varName);
     } else {
@@ -120,8 +124,8 @@ export class Scope {
    * check scope have binding a var in current scope
    */
   public hasOwnBinding(varName: string): Var<any> | void {
-    if (this.data.hasOwnProperty(varName)) {
-      return this.data[varName];
+    if (this.data.has(varName)) {
+      return this.data.get(varName);
     } else {
       return undefined;
     }
@@ -150,14 +154,16 @@ export class Scope {
     siblingScope.level = this.level;
     siblingScope.context = this.context;
     // siblingScope.origin = this;
-
+    this.data.forEach((value) => {
+      siblingScope.declare(value.kind, value.name, value.value);
+    });
     // copy the vars
-    for (const varName in this.data) {
-      if (this.data.hasOwnProperty(varName)) {
-        const $var = this.data[varName];
-        siblingScope.declare($var.kind, $var.name, $var.value);
-      }
-    }
+    // for (const varName in this.data) {
+    //   if (this.data.hasOwnProperty(varName)) {
+    //     const $var = this.data[varName];
+    //     siblingScope.declare($var.kind, $var.name, $var.value);
+    //   }
+    // }
     return siblingScope;
   }
 
@@ -177,8 +183,8 @@ export class Scope {
   }
 
   public del(varName: string): boolean {
-    if (this.data.hasOwnProperty(varName)) {
-      delete this.data[varName];
+    if (this.data.has(varName)) {
+      this.data.delete(varName);
     }
     return true;
   }

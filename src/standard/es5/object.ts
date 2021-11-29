@@ -12,25 +12,23 @@ export function ObjectExpression(path: Path<types.ObjectExpression>) {
   const newScope = scope.createChild(ScopeType.Object);
   const computedProperties: Array<types.ObjectProperty | types.ObjectMethod> = [];
 
-  for (const property of node.properties) {
+  node.properties.forEach((property) => {
     const tempProperty = property as types.ObjectMethod | types.ObjectProperty;
     if (tempProperty.computed === true) {
       computedProperties.push(tempProperty);
-      continue;
+      return;
     }
     if (isSpreadElement(property)) {
       const obj = path.visitor(path.createChild(property));
       Object.assign(object, obj);
-      continue;
+      return;
     }
     path.visitor(path.createChild(property, newScope, { object }));
-  }
-
+  });
   // eval the computed properties
-  for (const property of computedProperties) {
+  computedProperties.forEach((property) => {
     path.visitor(path.createChild(property, newScope, { object }));
-  }
-
+  });
   return object;
 }
 /*
@@ -53,7 +51,7 @@ export function ObjectProperty(path: Path<types.ObjectProperty>) {
 }
 
 export function ObjectMethod(path: Path<types.ObjectMethod>) {
-  const { node, scope, stack } = path;
+  const { node, scope, stack, ctx } = path;
   // If computed === true, object[property]. Else, object.property -- meaning property should be an Identifier.
   const methodName: string = !node.computed
     ? isIdentifier(node.key)
@@ -79,14 +77,15 @@ export function ObjectMethod(path: Path<types.ObjectMethod>) {
 
   const objectKindMap = {
     get() {
-      Object.defineProperty(path.ctx.object, methodName, { get: method });
+      Object.defineProperty(ctx.object, methodName, { get: method });
       scope.declareConst(methodName, method);
     },
     set() {
-      Object.defineProperty(path.ctx.object, methodName, { set: method });
+      Object.defineProperty(ctx.object, methodName, { set: method });
     },
     method() {
-      Object.defineProperty(path.ctx.object, methodName, { value: method });
+      ctx.object[methodName] = method;
+      // Object.defineProperty(ctx.object, methodName, { value: method });
     },
   };
 

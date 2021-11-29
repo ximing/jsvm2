@@ -29,5 +29,8 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
   * */
   const isPrototype = propertyName === 'prototype' && isIdentifier(property);
   const target = isPrototype ? new Prototype(obj) : obj[propertyName];
+  if (propertyName === 'call') {
+    console.log('propertyName', propertyName, isPrototype, target, obj);
+  }
   return target instanceof Prototype ? target : isFunction(target) ? target.bind(obj) : target;
 }
