@@ -140,7 +140,8 @@ describe('do while statement spec:', () => {
   });
 
   it('continue', function () {
-    expect(run(`
+    expect(
+      run(`
       var a = 1;
       doLoop:
       do {
@@ -148,7 +149,8 @@ describe('do while statement spec:', () => {
         continue doLoop;
       } while (a<10);
       module.exports = a;
-    `)).toEqual(10)
+    `)
+    ).toEqual(10);
   });
 });
 
@@ -229,6 +231,53 @@ describe('for in statement spec:', () => {
       attr: '1',
       index: '2',
       m: '3',
+    });
+  });
+  it('block break', function () {
+    expect(
+      run(`
+      var obj = {
+        a: false,
+        b: false,
+        c: false
+      };
+      foo: {
+        obj.a = true;
+        break foo;
+        obj.b = true;
+      }
+      obj.c = true;
+      module.exports = obj;
+    `)
+    ).toEqual({
+      a: true,
+      b: false,
+      c: true,
+    });
+  });
+  it('function block break', function () {
+    expect(
+      run(`
+      var obj = {
+        a: false,
+        b: false,
+        c: false
+      };
+      function render(){
+        foo: {
+          obj.a = true;
+          break foo;
+          obj.b = true;
+        }
+        obj.c = true;
+      }
+      render()
+      module.exports = obj;
+    `)
+    ).toEqual({
+      a: true,
+      b: false,
+      c: true,
     });
   });
 });

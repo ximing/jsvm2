@@ -12,7 +12,7 @@ describe('for scope spec:', () => {
     expect(scope.parent).toEqual(null);
     expect(scope.isolated).toBeTruthy();
     expect(scope.invasive).toBeFalsy();
-    expect(scope.data).toEqual({});
+    expect(scope.data.size).toEqual(0);
   });
 
   it('hasOwnBinding', () => {
