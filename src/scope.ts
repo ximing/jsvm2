@@ -9,6 +9,7 @@ import { Kind, KindType, Var } from './var';
 // };
 
 export class Scope {
+  // eslint-disable-next-line no-use-before-define
   readonly parent: Scope | null;
   readonly data: Map<string | number, any>;
   readonly name: string | undefined | symbol;
@@ -111,13 +112,21 @@ export class Scope {
    * check the scope have binding a var
    */
   public hasBinding(varName: string): Var<any> | void {
-    if (this.data.has(varName)) {
-      return this.data.get(varName);
-    } else if (this.parent) {
-      return this.parent.hasBinding(varName);
-    } else {
-      return undefined;
+    let n: Scope = this;
+    while (n) {
+      if (n.data.has(varName)) {
+        return n.data.get(varName);
+      }
+      n = this.parent!;
     }
+    return undefined;
+    // if (this.data.has(varName)) {
+    //   return this.data.get(varName);
+    // } else if (this.parent) {
+    //   return this.parent.hasBinding(varName);
+    // } else {
+    //   return undefined;
+    // }
   }
 
   /**
