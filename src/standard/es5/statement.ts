@@ -68,7 +68,23 @@ export function BlockStatement(path: Path<t.BlockStatement>) {
   for (const node of block.body) {
     const result = (tempResult = path.visitor(path.createChild(node, blockScope)));
     if (result instanceof Signal) {
-      return result;
+      if (
+        [
+          'ObjectMethod',
+          'FunctionDeclaration',
+          'FunctionExpression',
+          'ArrowFunctionExpression',
+        ].indexOf(
+          // @ts-ignore
+          path.parent?.node.type
+        ) >= 0
+      ) {
+        if (Signal.isReturn(result)) {
+          return result;
+        }
+      } else {
+        return result;
+      }
     }
   }
   // to support do-expression

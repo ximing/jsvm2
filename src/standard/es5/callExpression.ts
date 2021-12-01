@@ -54,9 +54,6 @@ export function CallExpression(path: Path<t.CallExpression>) {
     const thisVar = scope.hasBinding(THIS);
     context = thisVar ? thisVar.value : null;
   }
-  if (functionName === 'Ya.call') {
-    console.log('===>', func === Function.prototype.call);
-  }
   try {
     Object.prototype.hasOwnProperty(context);
     const result = func.apply(context, args);
