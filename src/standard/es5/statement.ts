@@ -66,6 +66,7 @@ export function BlockStatement(path: Path<t.BlockStatement>) {
 
   let tempResult;
   for (const node of block.body) {
+    // if (!isFunctionDeclaration(node) && !isVariableDeclaration(node)) {
     const result = (tempResult = path.visitor(path.createChild(node, blockScope)));
     if (result instanceof Signal) {
       if (
@@ -86,6 +87,7 @@ export function BlockStatement(path: Path<t.BlockStatement>) {
         return result;
       }
     }
+    // }
   }
   // to support do-expression
   // anyway, return the last item

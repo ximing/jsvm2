@@ -10,7 +10,8 @@ export function IfStatement(path: Path<t.IfStatement>) {
   ifScope.isolated = false;
   if (path.visitor(path.createChild(path.node.test, ifScope))) {
     return path.visitor(path.createChild(path.node.consequent, ifScope));
-  } else if (path.node.alternate) {
+  }
+  if (path.node.alternate) {
     return path.visitor(path.createChild(path.node.alternate, ifScope));
   }
 }

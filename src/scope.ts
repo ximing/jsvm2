@@ -112,12 +112,12 @@ export class Scope {
    * check the scope have binding a var
    */
   public hasBinding(varName: string): Var<any> | void {
-    let n: Scope = this;
-    while (n) {
-      if (n.data.has(varName)) {
-        return n.data.get(varName);
+    let s: Scope = this;
+    while (s) {
+      if (s.data.has(varName)) {
+        return s.data.get(varName);
       }
-      n = this.parent!;
+      s = s.parent!;
     }
     return undefined;
     // if (this.data.has(varName)) {
@@ -196,5 +196,18 @@ export class Scope {
       this.data.delete(varName);
     }
     return true;
+  }
+
+  get nextIsolated(): Scope {
+    let s: Scope = this;
+    while (s) {
+      if (s.invasive && s.parent) {
+        s = s.parent;
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+      return s;
+    }
+    return s;
   }
 }
