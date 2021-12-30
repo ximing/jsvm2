@@ -73,7 +73,11 @@ export function DoWhileStatement(path: Path<t.DoWhileStatement>) {
     const doWhileScope = scope.createChild(ScopeType.DoWhile);
     doWhileScope.invasive = true;
     doWhileScope.isolated = false;
-    const signal = path.visitor(path.createChild(node.body, doWhileScope));
+    const signal = path.visitor(
+      path.createChild(node.body, doWhileScope, {
+        labelName: undefined,
+      })
+    );
     if (Signal.isBreak(signal)) {
       if (!signal.value) {
         break;
@@ -104,7 +108,11 @@ export function WhileStatement(path: Path<t.WhileStatement>) {
     const whileScope = scope.createChild(ScopeType.While);
     whileScope.invasive = true;
     whileScope.isolated = false;
-    const signal = path.visitor(path.createChild(node.body, whileScope));
+    const signal = path.visitor(
+      path.createChild(node.body, whileScope, {
+        labelName: undefined,
+      })
+    );
     if (Signal.isBreak(signal)) {
       if (!signal.value) {
         break;
@@ -155,7 +163,11 @@ export function ForInStatement(path: Path<t.ForInStatement>) {
       forInScope.isolated = false;
       forInScope.declare(kind, name, value);
 
-      const signal = path.visitor(path.createChild(node.body, forInScope));
+      const signal = path.visitor(
+        path.createChild(node.body, forInScope, {
+          labelName: undefined,
+        })
+      );
 
       if (Signal.isBreak(signal)) {
         if (!signal.value) {

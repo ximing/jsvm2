@@ -122,6 +122,29 @@ describe('while statement spec:', () => {
     expect(res.i).toEqual(0);
     expect(res.arr).toEqual([10, 8, 6, 4, 2]);
   });
+
+  it('while while', function () {
+    const res = run(`
+      var i = 10;
+      var arr = [];
+      loop1:
+      while(i > 0){
+        if (i % 2 === 1){
+          while(i>5){
+              i--;
+              if(i===6){
+                continue loop1;
+              }
+          }
+        }
+        arr.push(i);
+        i--;
+      }
+      module.exports = {i, arr};
+    `);
+    expect(res.i).toEqual(0);
+    expect(res.arr).toEqual([10, 6, 5, 4, 3, 2, 1]);
+  });
 });
 
 describe('do while statement spec:', () => {

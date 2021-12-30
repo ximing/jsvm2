@@ -29,6 +29,7 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
   * */
   const isPrototype = propertyName === 'prototype' && isIdentifier(property);
   const target = isPrototype ? new Prototype(obj) : obj[propertyName];
+  return target
   // if (propertyName === 'call') {
   //   console.log(
   //     'propertyName',
@@ -39,8 +40,8 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
   //   );
   // }
   // 处理 call apply之类的函数  Object.prototype.call
-  if (target === Function.prototype[propertyName]) {
-    return target;
-  }
-  return target instanceof Prototype ? target : isFunction(target) ? target.bind(obj) : target;
+  // if (target === Function.prototype[propertyName]) {
+  //   return target;
+  // }
+  // return target instanceof Prototype ? target : isFunction(target) ? target.bind(obj) : target;
 }

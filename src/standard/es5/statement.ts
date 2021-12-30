@@ -16,7 +16,11 @@ export function DebuggerStatement() {
 
 export function LabeledStatement(path: Path<t.LabeledStatement>) {
   const label = path.node.label as t.Identifier;
-  return path.visitor(path.createChild(path.node.body, path.scope, { labelName: label.name }));
+  const res = path.visitor(path.createChild(path.node.body, path.scope, { labelName: label.name }));
+  if (res && Signal.isBreak(res) && res.value === label.name) {
+    return undefined;
+  }
+  return res;
 }
 
 export function EmptyStatement() {}
@@ -43,53 +47,22 @@ export function BlockStatement(path: Path<t.BlockStatement>) {
     } else if (isVariableDeclaration(node)) {
       for (const declaration of node.declarations) {
         if (node.kind === Kind.var) {
-          if (!scope.isolated && scope.invasive) {
-            const targetScope = (function get(s: Scope): Scope {
-              if (s.parent) {
-                if (s.parent.invasive) {
-                  return get(s.parent);
-                } else {
-                  return s.parent;
-                }
-              } else {
-                return s;
-              }
-            })(scope);
-            targetScope.declareVar((declaration.id as t.Identifier).name, undefined);
-          } else {
-            scope.declareVar((declaration.id as t.Identifier).name, undefined);
-          }
+          scope.declareVar((declaration.id as t.Identifier).name, undefined);
         }
       }
     }
   }
 
-  let tempResult;
+  let result;
   for (const node of block.body) {
-    // if (!isFunctionDeclaration(node) && !isVariableDeclaration(node)) {
-    const result = (tempResult = path.visitor(path.createChild(node, blockScope)));
-    if (result instanceof Signal) {
-      if (
-        [
-          'ObjectMethod',
-          'FunctionDeclaration',
-          'FunctionExpression',
-          'ArrowFunctionExpression',
-        ].indexOf(
-          // @ts-ignore
-          path.parent?.node.type
-        ) >= 0
-      ) {
-        if (Signal.isReturn(result)) {
-          return result;
-        }
-      } else {
+    if (!isFunctionDeclaration(node)) {
+      const result = path.visitor(path.createChild(node, blockScope));
+      if (result instanceof Signal) {
         return result;
       }
     }
-    // }
   }
   // to support do-expression
   // anyway, return the last item
-  return tempResult;
+  return result;
 }

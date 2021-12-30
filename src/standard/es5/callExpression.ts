@@ -11,14 +11,17 @@ import { ANONYMOUS, THIS } from '../../constants';
 // Object.prototype.hasOwnProperty.call(g, w)
 export function CallExpression(path: Path<t.CallExpression>) {
   const { node, scope, stack } = path;
+  let propertyName = '';
   const functionName: string = isMemberExpression(node.callee)
     ? (() => {
         if (isIdentifier(node.callee.property)) {
           // console.log("hello world")
-          return `${(node.callee.object as any).name}.${node.callee.property.name}`;
+          propertyName = node.callee.property.name;
+          return `${(node.callee.object as any).name}.${propertyName}`;
         } else if (isStringLiteral(node.callee.property)) {
           // console["log"]("123");
-          return `${(node.callee.object as any).name}["${node.callee.property.value}"]`;
+          propertyName = node.callee.property.value;
+          return `${(node.callee.object as any).name}["${propertyName}"]`;
         } else {
           return 'undefined';
         }
@@ -55,7 +58,6 @@ export function CallExpression(path: Path<t.CallExpression>) {
     context = thisVar ? thisVar.value : null;
   }
   try {
-    Object.prototype.hasOwnProperty(context);
     const result = func.apply(context, args);
     if (result instanceof Error) {
       result.stack = result.toString() + '\n' + stack.raw;

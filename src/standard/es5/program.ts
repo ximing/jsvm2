@@ -2,6 +2,7 @@ import { Program, Identifier } from '@babel/types';
 import { Path } from '../../path';
 import { isVariableDeclaration, isFunctionDeclaration } from '../babelTypes';
 import { Kind } from '../../var';
+import { Signal } from '../../signal';
 /*
 "program": {
     "type": "Program",
@@ -37,10 +38,14 @@ export function Program(path: Path<Program>) {
       }
     }
   }
-
+  let result;
   for (const node of program.body) {
     if (!isFunctionDeclaration(node)) {
-      path.visitor(path.createChild(node));
+      result = path.visitor(path.createChild(node));
+      if (Signal.isReturn(result)) {
+        return result;
+      }
     }
   }
+  return result;
 }

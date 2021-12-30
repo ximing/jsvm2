@@ -115,7 +115,7 @@ if (typeof ArrayBuffer !== UNDEFINED) {
 }
 
 if (typeof SharedArrayBuffer !== UNDEFINED) {
-  CTX.ArrayBuffer = SharedArrayBuffer;
+  CTX.SharedArrayBuffer = SharedArrayBuffer;
 }
 
 if (typeof Atomics !== UNDEFINED) {
@@ -123,7 +123,7 @@ if (typeof Atomics !== UNDEFINED) {
 }
 
 if (typeof DataView !== UNDEFINED) {
-  CTX.ArrayBuffer = DataView;
+  CTX.DataView = DataView;
 }
 
 if (typeof Promise !== UNDEFINED) {
