@@ -22,6 +22,7 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
   const { node, scope, stack } = path;
   // 处理匿名函数
   const functionName = node.id ? node.id.name : '';
+
   const func = function (this: any, ...args) {
     stack.enter(functionName);
 
@@ -66,6 +67,10 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
   };
 
   defineFunction(func, node);
+
+  if (functionName) {
+    scope.declareVar(functionName, func);
+  }
 
   return func;
 }
