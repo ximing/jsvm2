@@ -29,7 +29,11 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
   * */
   const isPrototype = propertyName === 'prototype' && isIdentifier(property);
   const target = isPrototype ? new Prototype(obj) : obj[propertyName];
-  return target
+  // 处理链式调用，比如 d().c()，CallExpression获取C之后再执行，需要获取C的Context，这时候会重复执行一遍d() 所以需要将ctx提前返回回去
+  if (!isPrototype && isFunction(target)) {
+    target.$ctx$ = obj;
+  }
+  return target;
   // if (propertyName === 'call') {
   //   console.log(
   //     'propertyName',

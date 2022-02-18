@@ -32,31 +32,34 @@ export function CallExpression(path: Path<t.CallExpression>) {
   const func = path.visitor(path.createChild(node.callee));
   const args = node.arguments.map((arg) => path.visitor(path.createChild(arg)));
   const isValidFunction = isFunction(func) as boolean;
-  let context: any = null;
-  if (isMemberExpression(node.callee)) {
-    if (!isValidFunction) {
-      throw overrideStack(ErrIsNotFunction(functionName), stack, node.callee.property);
+  let context: any = func.$ctx$;
+  if (!context) {
+    if (isMemberExpression(node.callee)) {
+      if (!isValidFunction) {
+        throw overrideStack(ErrIsNotFunction(functionName), stack, node.callee.property);
+      } else {
+        stack.push({
+          filename: ANONYMOUS,
+          stack: stack.currentStackName,
+          location: node.callee.property.loc,
+        });
+      }
+      context = path.visitor(path.createChild(node.callee.object));
     } else {
-      stack.push({
-        filename: ANONYMOUS,
-        stack: stack.currentStackName,
-        location: node.callee.property.loc,
-      });
+      if (!isValidFunction) {
+        throw overrideStack(ErrIsNotFunction(functionName), stack, node);
+      } else {
+        stack.push({
+          filename: ANONYMOUS,
+          stack: stack.currentStackName,
+          location: node.loc,
+        });
+      }
+      const thisVar = scope.hasBinding(THIS);
+      context = thisVar ? thisVar.value : null;
     }
-    context = path.visitor(path.createChild(node.callee.object));
-  } else {
-    if (!isValidFunction) {
-      throw overrideStack(ErrIsNotFunction(functionName), stack, node);
-    } else {
-      stack.push({
-        filename: ANONYMOUS,
-        stack: stack.currentStackName,
-        location: node.loc,
-      });
-    }
-    const thisVar = scope.hasBinding(THIS);
-    context = thisVar ? thisVar.value : null;
   }
+
   try {
     const result = func.apply(context, args);
     if (result instanceof Error) {
