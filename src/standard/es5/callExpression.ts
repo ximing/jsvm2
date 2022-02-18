@@ -32,7 +32,7 @@ export function CallExpression(path: Path<t.CallExpression>) {
   const func = path.visitor(path.createChild(node.callee));
   const args = node.arguments.map((arg) => path.visitor(path.createChild(arg)));
   const isValidFunction = isFunction(func) as boolean;
-  let context: any = func.$ctx$;
+  let context: any = func ? func.$ctx$ : null;
   if (!context) {
     if (isMemberExpression(node.callee)) {
       if (!isValidFunction) {
