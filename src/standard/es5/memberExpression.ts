@@ -5,7 +5,7 @@ import { isIdentifier } from '../babelTypes';
 import { isFunction, Prototype } from '../utils';
 
 export function MemberExpression(path: Path<t.MemberExpression>) {
-  const { node } = path;
+  const { node, ctx } = path;
   // https://doc.esdoc.org/github.com/mason-lang/esast/class/src/ast.js~MemberExpression.html
   // If computed === true, object[property]. Else, object.property -- meaning property should be an Identifier.
   const { object, property, computed } = node;
@@ -17,7 +17,22 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
     throw ErrCanNotReadProperty(propertyName, 'undefined');
   }
   if (obj === null) {
+    if (ctx.wxml) return undefined;
     throw ErrCanNotReadProperty(propertyName, 'null');
+  }
+
+  /*
+      var arrayProto = Array.prototype,
+      funcProto = Function.prototype,
+      objectProto = Object.prototype;
+  * */
+  if (obj instanceof Prototype) {
+    // @ts-ignore
+    return obj._constructor.prototype[propertyName];
+  }
+  const isPrototype = propertyName === 'prototype' && isIdentifier(property);
+  if (isPrototype) {
+    return new Prototype(obj);
   }
   /*
   function MyFunction(){
@@ -27,10 +42,14 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
     }
   };
   * */
-  const isPrototype = propertyName === 'prototype' && isIdentifier(property);
-  const target = isPrototype ? new Prototype(obj) : obj[propertyName];
+  // Date 等返回的时候，不能bind, 否则静态函数找不到 如 Date.now
+  // 返回 call 的时候
+  //   1. 要bind this，调用的地方不需要 apply
+  //   2. 不bind this，调用的地方apply
+  // 综上，member的时候不处理bind，统一在调用的地方处理
+  const target = obj[propertyName];
   // 处理链式调用，比如 d().c()，CallExpression获取C之后再执行，需要获取C的Context，这时候会重复执行一遍d() 所以需要将ctx提前返回回去
-  if (!isPrototype && isFunction(target)) {
+  if (isFunction(target)) {
     target.$ctx$ = obj;
   }
   return target;
