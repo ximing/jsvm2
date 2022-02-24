@@ -1,12 +1,9 @@
-import { parse } from '@babel/parser';
-
 import { Path } from './path';
 import { Scope } from './scope';
 import { Stack } from './stack';
 import { visitor } from './visitor';
 import { Context, ISandBox } from './context';
 import { MODULE, EXPORTS, THIS } from './constants';
-import { ScopeType, presetMap } from './types';
 
 /**
  * Run the code in context
@@ -15,46 +12,26 @@ import { ScopeType, presetMap } from './types';
  * @param {Context} context
  * @returns
  */
-export function runInContext(
-  code: string | any,
-  context?: Context,
-  preset: presetMap = presetMap.env
-) {
-  const scope = new Scope(ScopeType.Root, null);
-  scope.level = 0;
-  scope.invasive = true;
-  scope.declareConst(THIS, undefined);
-  scope.setContext(context);
-
+export function runInContext(ast: any, context = createContext()) {
+  const s = Scope.createRoot(context);
   // define module
   const $exports = {};
   const $module = { exports: $exports };
-  scope.declareConst(MODULE, $module);
-  scope.declareVar(EXPORTS, $exports);
-  let ast: any = code;
-  if (typeof code === 'string') {
-    ast = parse(code, {
-      sourceType: 'module',
-      plugins: [
-        'asyncGenerators',
-        'classProperties',
-        'decorators-legacy',
-        'doExpressions',
-        'exportDefaultFrom',
-        'flow',
-        'objectRestSpread',
-      ],
-    });
-  }
-  const path = new Path(ast, null, scope, {}, new Stack());
-  path.preset = preset;
-  path.visitor = visitor;
-  visitor(path);
+  s.declareConst(MODULE, $module);
+  s.declareVar(EXPORTS, $exports);
+  const path = new Path(ast, null, s, {}, new Stack());
+  const res = visitor(path);
   // exports
-  const moduleVar = scope.hasBinding(MODULE);
-  return moduleVar ? moduleVar.value.exports : undefined;
+  const moduleVar = s.hasBinding(MODULE);
+  return moduleVar ? moduleVar.value.exports : res;
 }
 
+export function run(ast: any, context?: Context) {
+  const s = Scope.createRoot(context);
+  const path = new Path(ast, null, s, {}, new Stack());
+  const res = visitor(path);
+  return res;
+}
 /**
  * Create a context
  * @export
@@ -65,4 +42,4 @@ export function createContext(sandbox: ISandBox = {}): Context {
   return new Context(sandbox);
 }
 
-export default { runInContext, createContext };
+export default { runInContext, createContext, run };

@@ -1,3 +1,4 @@
+import { THIS } from './constants';
 import { Context } from './context';
 import { ErrDuplicateDeclare } from './error';
 import { isolatedScopeMap, ScopeType } from './types';
@@ -14,10 +15,11 @@ export class Scope {
   readonly data: Map<string | number, any>;
   readonly name: string | undefined | symbol;
 
-  public invasive = false; // 变量提升的时候使用
+  // public invasive = false; // 变量提升的时候使用
   public context: Context;
+
   public level = 0;
-  public isolated = true; // 函数表达式使用 ,  BlockStatement 做变量提升也需要
+  // public isolated = true; // 函数表达式使用 ,  BlockStatement 做变量提升也需要
 
   constructor(
     public readonly type: ScopeType,
@@ -30,15 +32,27 @@ export class Scope {
     this.context = new Context();
   }
 
+  get invasive() {
+    return this.type === ScopeType.Block;
+  }
+
+  get isolated() {
+    return this.type === ScopeType.Function || this.type === ScopeType.Root;
+  }
+
   public setContext(context?: Context) {
     if (!context) return;
     this.context = context;
-    for (const name in context) {
-      if (context.hasOwnProperty(name)) {
-        // here should use $var
-        this.declareVar(name, context[name]);
-      }
-    }
+    // for (const name in context) {
+    //   if (context.hasOwnProperty(name)) {
+    //     // here should use $var
+    //     this.declareVar(name, context[name]);
+    //   }
+    // }
+    Object.keys(context).forEach((name) => {
+      // @ts-ignore
+      this.declareVar(name, context[name]);
+    });
   }
 
   public declare(kind: Kind | KindType, rawName: string, value: any): boolean {
@@ -113,7 +127,7 @@ export class Scope {
    */
   public hasBinding(varName: string): Var<any> | void {
     let s: Scope = this;
-    while (s) {
+    while (!!s) {
       if (s.data.has(varName)) {
         return s.data.get(varName);
       }
@@ -159,7 +173,7 @@ export class Scope {
     const siblingScope = new Scope(type || this.type, this.parent);
 
     // copy the properties
-    siblingScope.invasive = this.invasive;
+    // siblingScope.invasive = this.invasive;
     siblingScope.level = this.level;
     siblingScope.context = this.context;
     // siblingScope.origin = this;
@@ -208,6 +222,14 @@ export class Scope {
       }
       return s;
     }
+    return s;
+  }
+
+  static createRoot(context: any = {}): Scope {
+    const s = new Scope(ScopeType.Root, null);
+    s.level = 0;
+    s.declareConst(THIS, undefined);
+    s.setContext(context);
     return s;
   }
 }
