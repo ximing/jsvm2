@@ -12,32 +12,15 @@ export type AstPath<T> = {
 export enum ScopeType {
   Root,
   Function, // isolated scope
-  Method, // isolated scope
-  Constructor, // isolated scope
-  For,
-  ForChild,
-  ForIn,
-  ForOf,
-  While,
-  DoWhile,
-  Do,
-  Switch,
-  If,
-  ElseIf,
-  Object,
-  Try,
-  Catch,
-  Finally,
-  Class,
   Block,
 }
 
-export const isolatedScopeMap = {
-  [ScopeType.Function]: true,
-  [ScopeType.Constructor]: true,
-  [ScopeType.Method]: true,
-  [ScopeType.Object]: true,
-};
+// export const isolatedScopeMap = {
+//   [ScopeType.Function]: true,
+//   [ScopeType.Constructor]: true,
+//   [ScopeType.Method]: true,
+//   [ScopeType.Object]: true,
+// };
 
 export type EvaluateFunc = (path: Path<Node>) => any;
 

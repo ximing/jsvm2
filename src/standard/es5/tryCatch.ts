@@ -15,16 +15,16 @@ export function CatchClause(path: Path<t.CatchClause>) {
 export function TryStatement(path: Path<t.TryStatement>) {
   const { node, scope } = path;
   try {
-    const tryScope = scope.createChild(ScopeType.Try);
-    tryScope.invasive = true;
-    tryScope.isolated = false;
+    const tryScope = scope.createChild(ScopeType.Block);
+    // tryScope.invasive = true;
+    // tryScope.isolated = false;
     return path.visitor(path.createChild(node.block, tryScope));
   } catch (err) {
     if (node.handler) {
       const param = node.handler!.param as t.Identifier;
-      const catchScope = scope.createChild(ScopeType.Catch);
-      catchScope.invasive = true;
-      catchScope.isolated = false;
+      const catchScope = scope.createChild(ScopeType.Block);
+      // catchScope.invasive = true;
+      // catchScope.isolated = false;
       catchScope.declareConst(param.name, err);
       return path.visitor(path.createChild(node.handler!, catchScope));
     } else {
@@ -32,9 +32,9 @@ export function TryStatement(path: Path<t.TryStatement>) {
     }
   } finally {
     if (node.finalizer) {
-      const finallyScope = scope.createChild(ScopeType.Finally);
-      finallyScope.invasive = true;
-      finallyScope.isolated = false;
+      const finallyScope = scope.createChild(ScopeType.Block);
+      // finallyScope.invasive = true;
+      // finallyScope.isolated = false;
       const single = path.visitor(path.createChild(node.finalizer, finallyScope));
       // return single;
       if (Signal.isReturn(single)) {

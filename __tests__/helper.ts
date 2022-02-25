@@ -1,5 +1,5 @@
-import { parse } from '@babel/parser';
-import { createContext, runInContext } from '../src/vm';
+import { parse, parseExpression } from '@babel/parser';
+import { createContext, runInContext, run as VMRun } from '../src/vm';
 
 export const run = function (code, ctx = {}) {
   const sandbox: any = createContext(ctx);
@@ -17,4 +17,9 @@ export const run = function (code, ctx = {}) {
   });
 
   return runInContext(ast, sandbox);
+};
+
+export const runExp = function (code: string, ctx = {}) {
+  const sandbox: any = createContext(ctx);
+  return VMRun(parseExpression(code), sandbox);
 };

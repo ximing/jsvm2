@@ -5,9 +5,9 @@ import { Path } from '../../path';
 import { Signal } from '../../signal';
 
 export function IfStatement(path: Path<t.IfStatement>) {
-  const ifScope = path.scope.createChild(ScopeType.If);
-  ifScope.invasive = true;
-  ifScope.isolated = false;
+  const ifScope = path.scope.createChild(ScopeType.Block);
+  // ifScope.invasive = true;
+  // ifScope.isolated = false;
   if (path.visitor(path.createChild(path.node.test, ifScope))) {
     return path.visitor(path.createChild(path.node.consequent, ifScope));
   }
@@ -19,9 +19,9 @@ export function IfStatement(path: Path<t.IfStatement>) {
 export function SwitchStatement(path: Path<t.SwitchStatement>) {
   const { node, scope } = path;
   const discriminant = path.visitor(path.createChild(node.discriminant)); // switch的条件
-  const switchScope = scope.createChild(ScopeType.Switch);
-  switchScope.invasive = true;
-  switchScope.isolated = false;
+  const switchScope = scope.createChild(ScopeType.Block);
+  // switchScope.invasive = true;
+  // switchScope.isolated = false;
 
   let matched = false;
   for (const $case of node.cases) {

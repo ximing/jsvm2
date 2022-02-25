@@ -1,7 +1,7 @@
 import { THIS } from './constants';
 import { Context } from './context';
 import { ErrDuplicateDeclare } from './error';
-import { isolatedScopeMap, ScopeType } from './types';
+import { ScopeType } from './types';
 import { Kind, KindType, Var } from './var';
 
 // type ScopeData = {
@@ -94,7 +94,7 @@ export class Scope {
     // Hoisting
     // 1. if the current scope is top-level scope
     // 2. if the current scope type is one of types `function`, `constructor`
-    while (targetScope.parent !== null && !isolatedScopeMap[targetScope.type]) {
+    while (targetScope.parent !== null && !targetScope.isolated) {
       targetScope = targetScope.parent;
     }
 

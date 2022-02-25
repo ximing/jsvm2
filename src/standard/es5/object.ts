@@ -9,7 +9,7 @@ import { defineFunction } from '../utils';
 export function ObjectExpression(path: Path<types.ObjectExpression>) {
   const { node, scope } = path;
   const object = {};
-  const newScope = scope.createChild(ScopeType.Object);
+  const newScope = scope.createChild(ScopeType.Function);
   const computedProperties: Array<types.ObjectProperty | types.ObjectMethod> = [];
 
   node.properties.forEach((property) => {

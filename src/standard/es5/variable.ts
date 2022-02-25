@@ -4,7 +4,7 @@ import { isArrayPattern, isIdentifier, isObjectPattern, isObjectProperty } from 
 import { Node } from '../../types';
 import { overrideStack } from '../utils';
 import { ErrInvalidIterable } from '../../error';
-import { Scope } from '../../scope';
+// import { Scope } from '../../scope';
 import { Kind } from '../../var';
 import { TypeAnnotation } from '@babel/types';
 
@@ -83,22 +83,23 @@ export function VariableDeclaration(path: Path<t.VariableDeclaration>) {
        *   var a = 123
        * }
        */
-      if (scope.invasive && kind === Kind.var) {
-        const targetScope: Scope = (function get(s: Scope) {
-          if (s.parent) {
-            if (s.parent.invasive) {
-              return get(s.parent);
-            } else {
-              return s.parent;
-            }
-          } else {
-            return s;
-          }
-        })(scope);
-        targetScope.declareVar(varName, map[varName]);
-      } else {
-        scope.declare(kind, varName, map[varName]);
-      }
+      // if (scope.invasive && kind === Kind.var) {
+      //   // const targetScope: Scope = (function get(s: Scope) {
+      //   //   if (s.parent) {
+      //   //     if (s.parent.invasive) {
+      //   //       return get(s.parent);
+      //   //     } else {
+      //   //       return s.parent;
+      //   //     }
+      //   //   } else {
+      //   //     return s;
+      //   //   }
+      //   // })(scope);
+      //   scope.declareVar(varName, map[varName]);
+      // } else {
+      //   scope.declare(kind, varName, map[varName]);
+      // }
+      scope.declare(kind, varName, map[varName]);
     }
   });
 }

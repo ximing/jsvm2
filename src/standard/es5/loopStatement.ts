@@ -9,9 +9,9 @@ import { isIdentifier } from '../babelTypes';
 export function ForStatement(path: Path<t.ForStatement>) {
   const { node, scope, ctx } = path;
   const labelName = ctx.labelName as string | void;
-  const forScope = scope.createChild(ScopeType.For);
+  const forScope = scope.createChild(ScopeType.Block);
 
-  forScope.invasive = true; // 有块级作用域
+  // forScope.invasive = true; // 有块级作用域
 
   // init loop
   if (node.init) {
@@ -31,8 +31,8 @@ export function ForStatement(path: Path<t.ForStatement>) {
   while (true) {
     // every loop will create it's own scope
     // it should inherit from forScope
-    const loopScope = forScope.fork(ScopeType.ForChild);
-    loopScope.isolated = false;
+    const loopScope = forScope.fork(ScopeType.Block);
+    // loopScope.isolated = false;
     if (!test()) {
       break;
     }
@@ -70,9 +70,9 @@ export function DoWhileStatement(path: Path<t.DoWhileStatement>) {
   const labelName: string | void = ctx.labelName;
   // do while don't have his own scope
   do {
-    const doWhileScope = scope.createChild(ScopeType.DoWhile);
-    doWhileScope.invasive = true;
-    doWhileScope.isolated = false;
+    const doWhileScope = scope.createChild(ScopeType.Block);
+    // doWhileScope.invasive = true;
+    // doWhileScope.isolated = false;
     const signal = path.visitor(
       path.createChild(node.body, doWhileScope, {
         labelName: undefined,
@@ -105,9 +105,9 @@ export function WhileStatement(path: Path<t.WhileStatement>) {
   const labelName: string | void = ctx.labelName;
 
   while (path.visitor(path.createChild(node.test))) {
-    const whileScope = scope.createChild(ScopeType.While);
-    whileScope.invasive = true;
-    whileScope.isolated = false;
+    const whileScope = scope.createChild(ScopeType.Block);
+    // whileScope.invasive = true;
+    // whileScope.isolated = false;
     const signal = path.visitor(
       path.createChild(node.body, whileScope, {
         labelName: undefined,
@@ -158,9 +158,9 @@ export function ForInStatement(path: Path<t.ForInStatement>) {
   const right = path.visitor(path.createChild(node.right));
   for (const value in right) {
     if (Object.hasOwnProperty.call(right, value)) {
-      const forInScope = scope.createChild(ScopeType.ForIn);
-      forInScope.invasive = true;
-      forInScope.isolated = false;
+      const forInScope = scope.createChild(ScopeType.Block);
+      // forInScope.invasive = true;
+      // forInScope.isolated = false;
       forInScope.declare(kind, name, value);
 
       const signal = path.visitor(

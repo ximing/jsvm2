@@ -52,7 +52,7 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
           : undefined,
     });
     funcScope.declareConst(ARGUMENTS, arguments);
-    funcScope.isolated = false;
+    // funcScope.isolated = false;
 
     const result = path.visitor(path.createChild(node.body, funcScope));
     stack.leave();

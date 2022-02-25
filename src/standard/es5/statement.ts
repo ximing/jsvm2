@@ -28,17 +28,16 @@ export function EmptyStatement() {}
 // A block statement, i.e., a sequence of statements surrounded by braces.
 export function BlockStatement(path: Path<t.BlockStatement>) {
   const { node: block, scope } = path;
+  // let blockScope: Scope = !scope.isolated ? scope : scope.createChild(ScopeType.Block);
+  let blockScope = scope.createChild(ScopeType.Block);
+  // if (scope.isolated) {
+  //   blockScope = scope.createChild(ScopeType.Block);
+  //   // blockScope.invasive = true;
+  // } else {
+  //   blockScope = scope;
+  // }
 
-  let blockScope: Scope = !scope.isolated ? scope : scope.createChild(ScopeType.Block);
-
-  if (scope.isolated) {
-    blockScope = scope.createChild(ScopeType.Block);
-    blockScope.invasive = true;
-  } else {
-    blockScope = scope;
-  }
-
-  blockScope.isolated = true;
+  // blockScope.isolated = true;
 
   // hoisting
   for (const node of block.body) {
