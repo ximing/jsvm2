@@ -1,6 +1,5 @@
 import * as t from '@babel/types';
 import { Path } from '../../path';
-import { Scope } from '../../scope';
 import { Signal } from '../../signal';
 import { ScopeType } from '../../types';
 import { Kind } from '../../var';

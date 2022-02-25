@@ -3,7 +3,7 @@ import { Scope } from './scope';
 import { Stack } from './stack';
 import { visitor } from './visitor';
 import { Context, ISandBox } from './context';
-import { MODULE, EXPORTS, THIS } from './constants';
+import { MODULE, EXPORTS } from './constants';
 
 /**
  * Run the code in context
