@@ -157,37 +157,35 @@ export function ForInStatement(path: Path<t.ForInStatement>) {
 
   const right = path.visitor(path.createChild(node.right));
   for (const value in right) {
-    if (Object.hasOwnProperty.call(right, value)) {
-      const forInScope = scope.createChild(ScopeType.Block);
-      // forInScope.invasive = true;
-      // forInScope.isolated = false;
-      forInScope.declare(kind, name, value);
+    const forInScope = scope.createChild(ScopeType.Block);
+    // forInScope.invasive = true;
+    // forInScope.isolated = false;
+    forInScope.declare(kind, name, value);
 
-      const signal = path.visitor(
-        path.createChild(node.body, forInScope, {
-          labelName: undefined,
-        })
-      );
+    const signal = path.visitor(
+      path.createChild(node.body, forInScope, {
+        labelName: undefined,
+      })
+    );
 
-      if (Signal.isBreak(signal)) {
-        if (!signal.value) {
-          break;
-        }
-        if (signal.value === labelName) {
-          break;
-        }
-        return signal;
-      } else if (Signal.isContinue(signal)) {
-        if (!signal.value) {
-          continue;
-        }
-        if (signal.value === labelName) {
-          continue;
-        }
-        return signal;
-      } else if (Signal.isReturn(signal)) {
-        return signal;
+    if (Signal.isBreak(signal)) {
+      if (!signal.value) {
+        break;
       }
+      if (signal.value === labelName) {
+        break;
+      }
+      return signal;
+    } else if (Signal.isContinue(signal)) {
+      if (!signal.value) {
+        continue;
+      }
+      if (signal.value === labelName) {
+        continue;
+      }
+      return signal;
+    } else if (Signal.isReturn(signal)) {
+      return signal;
     }
   }
 }
