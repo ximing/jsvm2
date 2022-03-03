@@ -36,15 +36,17 @@ export function ObjectExpression(path: Path<types.ObjectExpression>) {
     a(){}, ObjectMethod
     c : ()=>{}, ObjectProperty
     b:1 ObjectProperty
+    [d]:1
   }
 * */
 export function ObjectProperty(path: Path<types.ObjectProperty>) {
   const { node, scope, ctx } = path;
   const { object } = ctx;
-  const val = path.visitor(path.createChild(node.value));
-  if (isIdentifier(node.key)) {
-    object[node.key.name] = val;
-    scope.declareVar(node.key.name, val);
+  const { value, key } = node;
+  const val = path.visitor(path.createChild(value));
+  if (isIdentifier(key) && !node.computed) {
+    object[key.name] = val;
+    // scope.declareVar(key.name, val);
   } else {
     object[path.visitor(path.createChild(node.key))] = val;
   }
