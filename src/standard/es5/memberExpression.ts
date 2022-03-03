@@ -28,7 +28,7 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
   * */
   if (obj instanceof Prototype) {
     // @ts-ignore
-    return obj._constructor.prototype[propertyName];
+    return obj.constructor.prototype[propertyName];
   }
   const isPrototype = propertyName === 'prototype' && isIdentifier(property);
   if (isPrototype) {
