@@ -10,14 +10,14 @@ export function ObjectExpression(path: Path<types.ObjectExpression>) {
   const { node, scope } = path;
   const object = {};
   const newScope = scope.createChild(ScopeType.Function);
-  const computedProperties: Array<types.ObjectProperty | types.ObjectMethod> = [];
+  // const computedProperties: Array<types.ObjectProperty | types.ObjectMethod> = [];
 
   node.properties.forEach((property) => {
-    const tempProperty = property as types.ObjectMethod | types.ObjectProperty;
-    if (tempProperty.computed === true) {
-      computedProperties.push(tempProperty);
-      return;
-    }
+    // const tempProperty = property as types.ObjectMethod | types.ObjectProperty;
+    // if (tempProperty.computed === true) {
+    //   computedProperties.push(tempProperty);
+    //   return;
+    // }
     if (isSpreadElement(property)) {
       const obj = path.visitor(path.createChild(property));
       Object.assign(object, obj);
@@ -26,9 +26,9 @@ export function ObjectExpression(path: Path<types.ObjectExpression>) {
     path.visitor(path.createChild(property, newScope, { object }));
   });
   // eval the computed properties
-  computedProperties.forEach((property) => {
-    path.visitor(path.createChild(property, newScope, { object }));
-  });
+  // computedProperties.forEach((property) => {
+  //   path.visitor(path.createChild(property, newScope, { object }));
+  // });
   return object;
 }
 /*
@@ -40,7 +40,7 @@ export function ObjectExpression(path: Path<types.ObjectExpression>) {
   }
 * */
 export function ObjectProperty(path: Path<types.ObjectProperty>) {
-  const { node, scope, ctx } = path;
+  const { node, ctx } = path;
   const { object } = ctx;
   const { value, key } = node;
   const val = path.visitor(path.createChild(value));
@@ -55,11 +55,10 @@ export function ObjectProperty(path: Path<types.ObjectProperty>) {
 export function ObjectMethod(path: Path<types.ObjectMethod>) {
   const { node, scope, stack, ctx } = path;
   // If computed === true, object[property]. Else, object.property -- meaning property should be an Identifier.
-  const methodName: string = !node.computed
-    ? isIdentifier(node.key)
+  const methodName: string =
+    !node.computed && isIdentifier(node.key)
       ? node.key.name
-      : path.visitor(path.createChild(node.key))
-    : path.visitor(path.createChild(node.key));
+      : path.visitor(path.createChild(node.key));
   const method = function (this: any) {
     stack.enter('Object.' + methodName);
     const args = [].slice.call(arguments);
@@ -80,7 +79,7 @@ export function ObjectMethod(path: Path<types.ObjectMethod>) {
   const objectKindMap = {
     get() {
       Object.defineProperty(ctx.object, methodName, { get: method });
-      scope.declareConst(methodName, method);
+      // scope.declareConst(methodName, method);
     },
     set() {
       Object.defineProperty(ctx.object, methodName, { set: method });

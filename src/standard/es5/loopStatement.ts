@@ -12,33 +12,18 @@ export function ForStatement(path: Path<t.ForStatement>) {
   const forScope = scope.createChild(ScopeType.Block);
 
   // forScope.invasive = true; // 有块级作用域
-
-  // init loop
-  if (node.init) {
-    path.visitor(path.createChild(node.init, forScope));
-  }
-
-  function update(): void {
-    if (node.update) {
-      path.visitor(path.createChild(node.update, forScope));
-    }
-  }
-
-  function test(): boolean {
-    return node.test ? path.visitor(path.createChild(node.test, forScope)) : true;
-  }
-
-  while (true) {
-    // every loop will create it's own scope
-    // it should inherit from forScope
+  const { init, update, test, body } = node;
+  for (
+    init && path.visitor(path.createChild(init, forScope));
+    !test || (test && path.visitor(path.createChild(test, forScope)));
+    update && path.visitor(path.createChild(update, forScope))
+  ) {
     const loopScope = forScope.fork(ScopeType.Block);
-    // loopScope.isolated = false;
-    if (!test()) {
-      break;
-    }
-
-    const signal = path.visitor(path.createChild(node.body, loopScope, { labelName: undefined }));
-
+    const signal = path.visitor(
+      path.createChild(body, loopScope, {
+        labelName: undefined,
+      })
+    );
     if (Signal.isBreak(signal)) {
       if (!signal.value) {
         break;
@@ -49,19 +34,19 @@ export function ForStatement(path: Path<t.ForStatement>) {
       return signal;
     } else if (Signal.isContinue(signal)) {
       if (!signal.value) {
-        update();
+        // eslint-disable-next-line no-continue
         continue;
       }
+      // 处理同级别的
       if (signal.value === labelName) {
-        update();
+        // eslint-disable-next-line no-continue
         continue;
       }
+      // 处理label 为父层级的
       return signal;
     } else if (Signal.isReturn(signal)) {
       return signal;
     }
-
-    update();
   }
 }
 

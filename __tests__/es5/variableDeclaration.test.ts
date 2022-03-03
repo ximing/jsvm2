@@ -101,14 +101,14 @@ describe('variable spec:', () => {
 
   it('complex', function () {
     const res = run(`
-      let v = 'v';
-      let o = { [v]: 1, f(){} };
-      let f = () => o;
-      module.exports = {v,o,f}
+      let v = 'v1';
+      var a = 'a1';
+      let o = { [v]: 1, f(){}, [a]:2 };
+      module.exports = {v, o}
     `);
-    expect(res.v).toEqual('v');
-    expect(res.o.v).toEqual(1);
-    expect(typeof res.o.f).toEqual('function');
+    expect(res.v).toEqual('v1');
+    expect(res.o.v1).toEqual(1);
+    expect(res.o.a1).toEqual(2);
     expect(res.o.f()).toEqual(undefined);
   });
 });
