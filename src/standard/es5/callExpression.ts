@@ -67,6 +67,8 @@ export function CallExpression(path: Path<t.CallExpression>) {
     }
     return result;
   } catch (err) {
-    console.log(err);
+    console.error(stack.raw);
+    console.error(err);
+    throw err;
   }
 }

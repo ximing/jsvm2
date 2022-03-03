@@ -145,4 +145,15 @@ describe('function spec:', () => {
     // TODO
     // expect(res.cover.name).toEqual('cover');
   });
+
+  it('function params cover', function () {
+    const res = run(`
+        const params = {a:1};
+        function a(params) {
+          params = {b:2}
+        }
+        module.exports = a(params);
+    `);
+    expect(res.b).toEqual(2);
+  });
 });

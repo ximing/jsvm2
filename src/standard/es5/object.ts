@@ -66,7 +66,7 @@ export function ObjectMethod(path: Path<types.ObjectMethod>) {
     newScope.declareConst(THIS, this);
     // define arguments
     node.params.forEach((param, i) => {
-      newScope.declareConst((param as types.Identifier).name, args[i]);
+      newScope.declareLet((param as types.Identifier).name, args[i]);
     });
     const result = path.visitor(path.createChild(node.body, newScope));
     stack.leave();
