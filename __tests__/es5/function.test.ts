@@ -157,4 +157,15 @@ describe('function spec:', () => {
     `);
     expect(res.b).toEqual(2);
   });
+
+  it('function return undefined', function () {
+    const res = run(`
+        const params = {a:1};
+        function a(params) {
+          params = {b:2}
+        }
+        module.exports = a(params);
+    `);
+    expect(res).toEqual(undefined);
+  });
 });

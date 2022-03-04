@@ -66,7 +66,7 @@ export function BlockStatement(path: Path<t.BlockStatement>) {
   let result;
   for (const node of block.body) {
     if (!isFunctionDeclaration(node)) {
-      const result = path.visitor(path.createChild(node, blockScope));
+      result = path.visitor(path.createChild(node, blockScope));
       if (result instanceof Signal) {
         return result;
       }
@@ -74,5 +74,7 @@ export function BlockStatement(path: Path<t.BlockStatement>) {
   }
   // to support do-expression
   // anyway, return the last item
-  return result;
+  if (scope.type !== ScopeType.Function) {
+    return result;
+  }
 }
