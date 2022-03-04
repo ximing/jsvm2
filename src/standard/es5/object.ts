@@ -1,8 +1,8 @@
 import * as types from '@babel/types';
 import { ScopeType } from '../../types';
 import { Path } from '../../path';
-import { isIdentifier, isSpreadElement } from '../babelTypes';
-import { THIS } from '../../constants';
+import { isAssignmentPattern, isIdentifier, isRestElement, isSpreadElement } from '../babelTypes';
+import { ARGUMENTS, THIS } from '../../constants';
 import { Signal } from '../../signal';
 import { defineFunction } from '../utils';
 
@@ -59,14 +59,28 @@ export function ObjectMethod(path: Path<types.ObjectMethod>) {
     !node.computed && isIdentifier(node.key)
       ? node.key.name
       : path.visitor(path.createChild(node.key));
+  // 这里改动要同步到function FunctionExpression 一份
+  // ObjectMethod不能创建一个实例，ObjectProperty.FunctionExpression 可以 所以下面不用搞实例的问题
   const method = function (this: any) {
     stack.enter('Object.' + methodName);
     const args = [].slice.call(arguments);
     const newScope = scope.createChild(ScopeType.Function);
     newScope.declareConst(THIS, this);
+    // eslint-disable-next-line prefer-rest-params
+    newScope.declareConst(ARGUMENTS, arguments);
     // define arguments
     node.params.forEach((param, i) => {
-      newScope.declareLet((param as types.Identifier).name, args[i]);
+      if (isIdentifier(param)) {
+        newScope.declareLet(param.name, args[i]);
+      } else if (isAssignmentPattern(param)) {
+        // @es2015 default parameters
+        path.visitor(path.createChild(param, newScope, { value: args[i] }));
+      } else if (isRestElement(param)) {
+        // @es2015 rest parameters
+        path.visitor(path.createChild(param, newScope, { value: args.slice(i) }));
+      } else {
+        console.error('ObjectMethod: 无效参数');
+      }
     });
     const result = path.visitor(path.createChild(node.body, newScope));
     stack.leave();

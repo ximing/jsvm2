@@ -151,6 +151,7 @@ describe('function spec:', () => {
         const params = {a:1};
         function a(params) {
           params = {b:2}
+          return params
         }
         module.exports = a(params);
     `);

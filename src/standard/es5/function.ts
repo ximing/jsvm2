@@ -23,6 +23,7 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
   // 处理匿名函数
   const functionName = node.id ? node.id.name : '';
 
+  // 这里改动要同步到object ObjectMethod 一份
   const func = function (this: any, ...args) {
     stack.enter(functionName);
 
@@ -40,6 +41,8 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
       } else if (isRestElement(param)) {
         // @es2015 rest parameters
         path.visitor(path.createChild(param, funcScope, { value: args.slice(i) }));
+      }else{
+        console.error('Function: 无效参数');
       }
     }
 
