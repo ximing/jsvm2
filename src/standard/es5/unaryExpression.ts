@@ -22,7 +22,11 @@ export function UnaryExpression(path: Path<t.UnaryExpression>) {
         const $this = scope.hasBinding(THIS);
         if ($this) {
           return $this.value[node.argument.name];
+        } else {
+          console.error('jsvm illegal this');
         }
+      } else {
+        console.error('jsvm illegal delete');
       }
     },
     typeof: (): string => {

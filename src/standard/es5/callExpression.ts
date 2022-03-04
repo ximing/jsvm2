@@ -55,7 +55,7 @@ export function CallExpression(path: Path<t.CallExpression>) {
           location: node.loc,
         });
       }
-      const thisVar = scope.hasBinding(THIS);
+      const thisVar = scope.hasOwnBinding(THIS);
       context = thisVar ? thisVar.value : null;
     }
   }

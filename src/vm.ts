@@ -22,7 +22,7 @@ export function runInContext(ast: any, context = createContext()) {
   const path = new Path(ast, null, s, {}, new Stack());
   const res = visitor(path);
   // exports
-  const moduleVar = s.hasBinding(MODULE);
+  const moduleVar = s.hasOwnBinding(MODULE);
   return moduleVar ? moduleVar.value.exports : res;
 }
 
