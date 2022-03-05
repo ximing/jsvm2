@@ -3,14 +3,14 @@ import { Path } from '../../path';
 import { isIdentifier, isMemberExpression, isStringLiteral } from '../babelTypes';
 import { isFunction, overrideStack } from '../utils';
 import { ErrIsNotFunction } from '../../error';
-import { ANONYMOUS, THIS } from '../../constants';
+import { ANONYMOUS } from '../../constants';
 
 // console.log("123")
 // console['log']("123")
 // log("12")
 // Object.prototype.hasOwnProperty.call(g, w)
 export function CallExpression(path: Path<t.CallExpression>) {
-  const { node, scope, stack } = path;
+  const { node, stack } = path;
   let propertyName = '';
   const functionName: string = isMemberExpression(node.callee)
     ? (() => {
@@ -32,33 +32,54 @@ export function CallExpression(path: Path<t.CallExpression>) {
   const func = path.visitor(path.createChild(node.callee));
   const args = node.arguments.map((arg) => path.visitor(path.createChild(arg)));
   const isValidFunction = isFunction(func) as boolean;
-  let context: any = func ? func.$ctx$ : null;
-  if (!context) {
-    if (isMemberExpression(node.callee)) {
-      if (!isValidFunction) {
-        throw overrideStack(ErrIsNotFunction(functionName), stack, node.callee.property);
-      } else {
-        stack.push({
-          filename: ANONYMOUS,
-          stack: stack.currentStackName,
-          location: node.callee.property.loc,
-        });
-      }
-      context = path.visitor(path.createChild(node.callee.object));
+  let context: any = func ? func.$ctx$ : undefined;
+  if (isMemberExpression(node.callee)) {
+    if (!isValidFunction) {
+      throw overrideStack(ErrIsNotFunction(functionName), stack, node.callee.property);
     } else {
-      if (!isValidFunction) {
-        throw overrideStack(ErrIsNotFunction(functionName), stack, node);
-      } else {
-        stack.push({
-          filename: ANONYMOUS,
-          stack: stack.currentStackName,
-          location: node.loc,
-        });
-      }
-      const thisVar = scope.hasOwnBinding(THIS);
-      context = thisVar ? thisVar.value : null;
+      stack.push({
+        filename: ANONYMOUS,
+        stack: stack.currentStackName,
+        location: node.callee.property.loc,
+      });
+    }
+  } else {
+    if (!isValidFunction) {
+      throw overrideStack(ErrIsNotFunction(functionName), stack, node);
+    } else {
+      stack.push({
+        filename: ANONYMOUS,
+        stack: stack.currentStackName,
+        location: node.loc,
+      });
     }
   }
+  // if (!context) {
+  //   if (isMemberExpression(node.callee)) {
+  //     if (!isValidFunction) {
+  //       throw overrideStack(ErrIsNotFunction(functionName), stack, node.callee.property);
+  //     } else {
+  //       stack.push({
+  //         filename: ANONYMOUS,
+  //         stack: stack.currentStackName,
+  //         location: node.callee.property.loc,
+  //       });
+  //     }
+  //     context = path.visitor(path.createChild(node.callee.object));
+  //   } else {
+  //     if (!isValidFunction) {
+  //       throw overrideStack(ErrIsNotFunction(functionName), stack, node);
+  //     } else {
+  //       stack.push({
+  //         filename: ANONYMOUS,
+  //         stack: stack.currentStackName,
+  //         location: node.loc,
+  //       });
+  //     }
+  //     const thisVar = scope.hasOwnBinding(THIS);
+  //     context = thisVar ? thisVar.value : null;
+  //   }
+  // }
 
   try {
     const result = func.apply(context, args);

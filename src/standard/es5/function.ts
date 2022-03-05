@@ -41,7 +41,7 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
       } else if (isRestElement(param)) {
         // @es2015 rest parameters
         path.visitor(path.createChild(param, funcScope, { value: args.slice(i) }));
-      }else{
+      } else {
         console.error('Function: 无效参数');
       }
     }
@@ -68,9 +68,10 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
       return result;
     }
   };
+  const thisVar = scope.hasBinding(THIS);
 
   defineFunction(func, node);
-
+  func.$ctx$ = thisVar ? thisVar.value : undefined;
   if (functionName) {
     scope.declareVar(functionName, func);
   }
