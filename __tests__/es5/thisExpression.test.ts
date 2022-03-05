@@ -97,4 +97,40 @@ describe('if scope spec:', () => {
     `);
     expect(res).toEqual(4);
   });
+
+  it('object', function () {
+    const res = run(`
+      var A = function () {
+        function A() {}
+      
+        var _proto = A.prototype;
+      
+        _proto.b = function b() {
+          var _this = this;
+      
+          var fn = function fn() {
+            return _this;
+          };
+      
+          return fn();
+        };
+      
+        _proto.c = function c() {
+          return this;
+        };
+      
+        return A;
+      }();
+      const obj = new A();
+      module.exports = {
+        b: obj.b(),
+        c: obj.c(),
+        A: A,
+        obj: obj
+      };
+    `);
+    expect(res.b).toEqual(res.obj);
+    expect(res.c).toEqual(res.obj);
+    expect(res.b instanceof res.A).toEqual(true);
+  });
 });
