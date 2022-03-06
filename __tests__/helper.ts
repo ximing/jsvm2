@@ -1,9 +1,15 @@
 import { parse, parseExpression } from '@babel/parser';
 import { createContext, runInContext, run as VMRun } from '../src/vm';
 
+const babel = require('@babel/core');
+
 export const run = function (code, ctx = {}) {
-  const sandbox: any = createContext(ctx);
-  const ast = parse(code, {
+  const result = babel.transformSync(code, {
+    plugins: [require('../plugin/hoisting')],
+    configFile: false,
+    babelrc: false,
+  });
+  const ast = parse(result.code, {
     sourceType: 'module',
     plugins: [
       'asyncGenerators',
@@ -15,7 +21,7 @@ export const run = function (code, ctx = {}) {
       'objectRestSpread',
     ],
   });
-
+  const sandbox: any = createContext(ctx);
   return runInContext(ast, sandbox);
 };
 

@@ -2,7 +2,7 @@ import {
   ArrayPattern,
   AssignmentPattern,
   // ArrayExpression,
-  // CallExpression,
+  CallExpression,
   // ClassMethod,
   ClassProperty,
   FunctionDeclaration,
@@ -89,9 +89,9 @@ export function isClassProperty(node: Node): node is ClassProperty {
 //   return is(node, 'ClassMethod');
 // }
 //
-// export function isCallExpression(node: Node): node is CallExpression {
-//   return is(node, 'CallExpression');
-// }
+export function isCallExpression(node: Node): node is CallExpression {
+  return is(node, 'CallExpression');
+}
 //
 // export function isImportDefaultSpecifier(node: Node): node is ImportDefaultSpecifier {
 //   return is(node, 'ImportDefaultSpecifier');

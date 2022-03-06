@@ -1,11 +1,17 @@
 import * as t from '@babel/types';
 import { ErrCanNotReadProperty } from '../../error';
 import { Path } from '../../path';
-import { isIdentifier } from '../babelTypes';
+import { isCallExpression, isIdentifier } from '../babelTypes';
 import { isFunction, Prototype } from '../utils';
 
+function defineCtx(target: any, parent: any, ctx: any) {
+  if (isFunction(target) && parent && isCallExpression(parent.node)) {
+    (parent.node as any).$ctx$ = ctx;
+    // parent.scope.declareConst(THIS, obj);
+  }
+}
 export function MemberExpression(path: Path<t.MemberExpression>) {
-  const { node, ctx } = path;
+  const { node, ctx, parent } = path;
   // https://doc.esdoc.org/github.com/mason-lang/esast/class/src/ast.js~MemberExpression.html
   // If computed === true, object[property]. Else, object.property -- meaning property should be an Identifier.
   const { object, property, computed } = node;
@@ -28,7 +34,9 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
   * */
   if (obj instanceof Prototype) {
     // @ts-ignore
-    return obj.constructor.prototype[propertyName];
+    const target = obj.constructor.prototype[propertyName];
+    defineCtx(target, parent, obj);
+    return target;
   }
   const isPrototype = propertyName === 'prototype' && isIdentifier(property);
   if (isPrototype) {
@@ -49,9 +57,7 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
   // 综上，member的时候不处理bind，统一在调用的地方处理
   const target = obj[propertyName];
   // 处理链式调用，比如 d().c()，CallExpression获取C之后再执行，需要获取C的Context，这时候会重复执行一遍d() 所以需要将ctx提前返回回去
-  if (isFunction(target)) {
-    target.$ctx$ = obj;
-  }
+  defineCtx(target, parent, obj);
   return target;
   // if (propertyName === 'call') {
   //   console.log(

@@ -1,6 +1,6 @@
 import { run } from '../helper';
 
-describe('if scope spec:', () => {
+describe('this expression spec:', () => {
   it('base', function () {
     expect(
       run(`
@@ -56,6 +56,17 @@ describe('if scope spec:', () => {
     expect(res).toEqual(undefined);
   });
 
+  it('function', function () {
+    const res = run(`
+      function b(){ return this}
+      function a(){
+        return b();
+      }
+      module.exports = a()
+    `);
+    expect(res).toEqual(undefined);
+  });
+
   it('function in object', function () {
     const res = run(`
       function foo () {
@@ -65,6 +76,35 @@ describe('if scope spec:', () => {
       module.exports = obj.foo();
     `);
     expect(res).toEqual(1);
+  });
+
+  it('params', function () {
+    const res = run(`
+      function foo () {
+        return this;
+      }
+      function doFoo (fn) {
+        return fn()
+      }
+      var obj = { a: 1, foo }
+      module.exports = doFoo(obj.foo);
+    `);
+    expect(res).toEqual(undefined);
+  });
+
+  it('params', function () {
+    const res = run(`
+      function foo () {
+        return this;
+      }
+      function doFoo (fn) {
+        return fn()
+      }
+      var obj = { a: 1, foo }
+      var obj2 = { a: 2, doFoo }
+      module.exports = obj2.doFoo(obj.foo);
+    `);
+    expect(res).toEqual(undefined);
   });
 
   it('bind', function () {
@@ -100,8 +140,12 @@ describe('if scope spec:', () => {
 
   it('object', function () {
     const res = run(`
+      var temp = null;
       var A = function () {
-        function A() {}
+        function A() {
+          this.e = 'e';
+          temp = this.d()
+        }
       
         var _proto = A.prototype;
       
@@ -118,6 +162,10 @@ describe('if scope spec:', () => {
         _proto.c = function c() {
           return this;
         };
+        
+        _proto.d = function c() {
+          return this.e;
+        };
       
         return A;
       }();
@@ -126,11 +174,13 @@ describe('if scope spec:', () => {
         b: obj.b(),
         c: obj.c(),
         A: A,
-        obj: obj
+        obj: obj,
+        temp: temp
       };
     `);
     expect(res.b).toEqual(res.obj);
     expect(res.c).toEqual(res.obj);
+    expect(res.temp).toEqual('e');
     expect(res.b instanceof res.A).toEqual(true);
   });
 });

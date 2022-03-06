@@ -4,7 +4,7 @@ import { Path } from '../../path';
 import { ARGUMENTS, NEW, THIS } from '../../constants';
 import { isAssignmentPattern, isIdentifier, isRestElement } from '../babelTypes';
 import { Signal } from '../../signal';
-import { defineFunction, This } from '../utils';
+import { defineFunction, functionThis, This } from '../utils';
 
 // TODO toString() 不准确
 
@@ -22,13 +22,13 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
   const { node, scope, stack } = path;
   // 处理匿名函数
   const functionName = node.id ? node.id.name : '';
-
+  let shouldReturnInstance = false;
   // 这里改动要同步到object ObjectMethod 一份
   const func = function (this: any, ...args) {
     stack.enter(functionName);
 
     // 判断是不是构造函数，如果是构造函数要返回一个实例
-    const shouldReturnInstance = args.length && args[args.length - 1] instanceof This && args.pop();
+    shouldReturnInstance = args.length && args[args.length - 1] instanceof This && args.pop();
 
     const funcScope = scope.createChild(ScopeType.Function);
     for (let i = 0; i < node.params.length; i++) {
@@ -68,10 +68,13 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
       return result;
     }
   };
-  const thisVar = scope.hasBinding(THIS);
-
   defineFunction(func, node);
-  func.$ctx$ = thisVar ? thisVar.value : undefined;
+  const thisVar = scope.hasBinding(THIS);
+  // 定义时候的this
+  // func.$this$ = thisVar ? thisVar.value : undefined;
+  if (thisVar) {
+    functionThis.set(func, thisVar.value);
+  }
   if (functionName) {
     scope.declareVar(functionName, func);
   }

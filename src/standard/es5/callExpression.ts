@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import { Path } from '../../path';
 import { isIdentifier, isMemberExpression, isStringLiteral } from '../babelTypes';
-import { isFunction, overrideStack } from '../utils';
+import { functionThis, isFunction, overrideStack } from '../utils';
 import { ErrIsNotFunction } from '../../error';
 import { ANONYMOUS } from '../../constants';
 
@@ -28,11 +28,39 @@ export function CallExpression(path: Path<t.CallExpression>) {
       })()
     : // log("123")
       (node.callee as t.Identifier).name;
-  // 获取函数
-  const func = path.visitor(path.createChild(node.callee));
+  /*
+   * 有三种情况
+   * 1. 直接执行函数 setTimeout(()=>{},0)     this在函数定义时
+   * 2. plain Object 内执行对象               运行时再确定
+   *    var obj = {
+   *       fn(){},                           运行时再确定  MemberExpression
+   *       fn:()=>{}  // 这种this会被babel处理，可以不考虑
+   *       fn:function(){}                    运行时再确定  MemberExpression
+   *     }
+   *    obj.fn();
+   * 3. class 情况
+   *    var A = function () {
+        function A() {}
+        var _proto = A.prototype;
+        _proto.b = function b() {               jsvm运行时确定  MemberExpression
+          var _this = this;
+          var fn = function fn() {
+            return _this;
+          };
+          return fn();
+        };
+        _proto.c = function c() {
+          return this;
+        };
+        return A;
+      }();
+   * 4. class constructor
+   *    new  jsvm运行时确定  MemberExpression
+   * */
+  // 顺序不能乱，只需要对执行的函数的cts做提前确定，参数里面也可能有函数表达式 比如 obj2.doFoo(obj.foo)
   const args = node.arguments.map((arg) => path.visitor(path.createChild(arg)));
+  const func = path.visitor(path.createChild(node.callee));
   const isValidFunction = isFunction(func) as boolean;
-  let context: any = func ? func.$ctx$ : undefined;
   if (isMemberExpression(node.callee)) {
     if (!isValidFunction) {
       throw overrideStack(ErrIsNotFunction(functionName), stack, node.callee.property);
@@ -43,6 +71,7 @@ export function CallExpression(path: Path<t.CallExpression>) {
         location: node.callee.property.loc,
       });
     }
+    // context = path.visitor(path.createChild(node.callee.object));
   } else {
     if (!isValidFunction) {
       throw overrideStack(ErrIsNotFunction(functionName), stack, node);
@@ -52,35 +81,12 @@ export function CallExpression(path: Path<t.CallExpression>) {
         stack: stack.currentStackName,
         location: node.loc,
       });
+      // const thisVar = scope.hasOwnBinding(THIS);
+      // context = thisVar ? thisVar.value : null;
     }
   }
-  // if (!context) {
-  //   if (isMemberExpression(node.callee)) {
-  //     if (!isValidFunction) {
-  //       throw overrideStack(ErrIsNotFunction(functionName), stack, node.callee.property);
-  //     } else {
-  //       stack.push({
-  //         filename: ANONYMOUS,
-  //         stack: stack.currentStackName,
-  //         location: node.callee.property.loc,
-  //       });
-  //     }
-  //     context = path.visitor(path.createChild(node.callee.object));
-  //   } else {
-  //     if (!isValidFunction) {
-  //       throw overrideStack(ErrIsNotFunction(functionName), stack, node);
-  //     } else {
-  //       stack.push({
-  //         filename: ANONYMOUS,
-  //         stack: stack.currentStackName,
-  //         location: node.loc,
-  //       });
-  //     }
-  //     const thisVar = scope.hasOwnBinding(THIS);
-  //     context = thisVar ? thisVar.value : null;
-  //   }
-  // }
-
+  // const thisVar = scope.hasOwnBinding(THIS);
+  let context: any = (node as any).$ctx$ || functionThis.get(func) || undefined;
   try {
     const result = func.apply(context, args);
     if (result instanceof Error) {

@@ -36,3 +36,5 @@ export class Prototype {
 export class This {
   constructor(public context) {}
 }
+
+export const functionThis = new WeakMap();
