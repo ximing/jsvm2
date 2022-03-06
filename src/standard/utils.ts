@@ -38,3 +38,5 @@ export class This {
 }
 
 export const functionThis = new WeakMap();
+
+export const runtimeThis = new WeakMap();

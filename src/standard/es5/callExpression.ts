@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import { Path } from '../../path';
 import { isIdentifier, isMemberExpression, isStringLiteral } from '../babelTypes';
-import { functionThis, isFunction, overrideStack } from '../utils';
+import { functionThis, isFunction, overrideStack, runtimeThis } from '../utils';
 import { ErrIsNotFunction } from '../../error';
 import { ANONYMOUS } from '../../constants';
 
@@ -86,7 +86,8 @@ export function CallExpression(path: Path<t.CallExpression>) {
     }
   }
   // const thisVar = scope.hasOwnBinding(THIS);
-  let context: any = (node as any).$ctx$ || functionThis.get(func) || undefined;
+  // let context: any = (node as any).$ctx$ || functionThis.get(func) || undefined;
+  let context: any = runtimeThis.get(node) || functionThis.get(func) || undefined;
   try {
     const result = func.apply(context, args);
     if (result instanceof Error) {

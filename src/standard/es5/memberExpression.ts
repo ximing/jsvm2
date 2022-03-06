@@ -2,11 +2,12 @@ import * as t from '@babel/types';
 import { ErrCanNotReadProperty } from '../../error';
 import { Path } from '../../path';
 import { isCallExpression, isIdentifier } from '../babelTypes';
-import { isFunction, Prototype } from '../utils';
+import { isFunction, Prototype, runtimeThis } from '../utils';
 
 function defineCtx(target: any, parent: any, ctx: any) {
   if (isFunction(target) && parent && isCallExpression(parent.node)) {
-    (parent.node as any).$ctx$ = ctx;
+    // (parent.node as any).$ctx$ = ctx;
+    runtimeThis.set(parent.node, ctx);
     // parent.scope.declareConst(THIS, obj);
   }
 }
