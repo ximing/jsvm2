@@ -1,4 +1,5 @@
 import { run } from '../helper';
+import { ErrNotDefined } from '../../src/error';
 
 describe('assignment spec:', () => {
   it('base', () => {
@@ -30,16 +31,14 @@ describe('assignment spec:', () => {
   });
 
   it('not defined', () => {
-    try {
+    expect(() =>
       run(
         `
 const a = 123;
 a = b
       `
-      );
-    } catch (err) {
-      expect(err.message).toEqual('b is not defined');
-    }
+      )
+    ).toThrowError(ErrNotDefined('b').message);
   });
 
   it('assignment = += -= *= /= %= <<= >>= >>>= &= ^= |=', () => {

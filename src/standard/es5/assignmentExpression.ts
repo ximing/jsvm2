@@ -4,7 +4,7 @@ import { ErrNotDefined } from '../../error';
 import { Path } from '../../path';
 import { Kind, Var } from '../../var';
 import { isIdentifier, isMemberExpression } from '../babelTypes';
-import { overrideStack, Prototype } from '../utils';
+import { overrideStack } from '../utils';
 
 export const AssignmentExpressionMap = {
   '=': ($var: Var, v) => {
@@ -117,7 +117,18 @@ export function AssignmentExpression(path: Path<types.AssignmentExpression>) {
      * 所以，现在b={n:1,x:{n:2}};a={n:2};
      * */
     const left = node.left;
+    //   this.xx = 1;
+    //     left
+    // object property
     const object: any = path.visitor(path.createChild(left.object));
+    // 考虑 this.xxx(); 情况
+    /*
+    * function Child (name, age) {
+          Parent.call(this, name);
+          this.age = age;
+          this.n = this.getName(); // <-- 这里
+      }
+    * */
     rightValue = path.visitor(path.createChild(node.right));
 
     const property: string = left.computed
@@ -128,12 +139,18 @@ export function AssignmentExpression(path: Path<types.AssignmentExpression>) {
     $var = {
       kind: Kind.var,
       set value(value: any) {
-        if (object instanceof Prototype) {
-          const Constructor = object.constructor;
-          Constructor.prototype[property] = value;
-        } else {
-          object[property] = value;
-        }
+        // if (object instanceof Prototype) {
+        //   // subClass.prototype.aaa = 1;
+        //   const Constructor = object.constructor;
+        //   Constructor.prototype[property] = value;
+        // } else if (object[property] instanceof Prototype) {
+        //   // subClass.prototype = Object.create()
+        //   const Constructor = object[property].constructor;
+        //   Constructor.prototype = value;
+        // } else {
+        //   object[property] = value;
+        // }
+        object[property] = value;
       },
       get value() {
         return object[property];

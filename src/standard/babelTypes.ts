@@ -100,3 +100,6 @@ export function isCallExpression(node: Node): node is CallExpression {
 // export function isImportSpecifier(node: Node): node is ImportSpecifier {
 //   return is(node, 'ImportSpecifier');
 // }
+export function isThisExpression(node: Node): node is StringLiteral {
+  return is(node, 'ThisExpression');
+}

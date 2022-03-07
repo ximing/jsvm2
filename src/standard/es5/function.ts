@@ -4,7 +4,7 @@ import { Path } from '../../path';
 import { ARGUMENTS, NEW, THIS } from '../../constants';
 import { isAssignmentPattern, isIdentifier, isRestElement } from '../babelTypes';
 import { Signal } from '../../signal';
-import { defineFunction, functionThis, This } from '../utils';
+import { defineFunction, functionThis, newFunction } from '../utils';
 
 // TODO toString() 不准确
 
@@ -28,7 +28,8 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
     stack.enter(functionName);
 
     // 判断是不是构造函数，如果是构造函数要返回一个实例
-    shouldReturnInstance = args.length && args[args.length - 1] instanceof This && args.pop();
+    shouldReturnInstance = newFunction.has(func);
+    // args.length && args[args.length - 1] instanceof This && args.pop();
 
     const funcScope = scope.createChild(ScopeType.Function);
     for (let i = 0; i < node.params.length; i++) {

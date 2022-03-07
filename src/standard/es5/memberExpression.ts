@@ -2,7 +2,7 @@ import * as t from '@babel/types';
 import { ErrCanNotReadProperty } from '../../error';
 import { Path } from '../../path';
 import { isCallExpression, isIdentifier } from '../babelTypes';
-import { isFunction, Prototype, runtimeThis } from '../utils';
+import { isFunction, runtimeThis } from '../utils';
 
 function defineCtx(target: any, parent: any, ctx: any) {
   if (isFunction(target) && parent && isCallExpression(parent.node)) {
@@ -32,17 +32,18 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
       var arrayProto = Array.prototype,
       funcProto = Function.prototype,
       objectProto = Object.prototype;
+      objectProto.assign  // obj instanceof Prototype
   * */
-  if (obj instanceof Prototype) {
-    // @ts-ignore
-    const target = obj.constructor.prototype[propertyName];
-    defineCtx(target, parent, obj);
-    return target;
-  }
-  const isPrototype = propertyName === 'prototype' && isIdentifier(property);
-  if (isPrototype) {
-    return new Prototype(obj);
-  }
+  // if (obj instanceof Prototype) {
+  //   // @ts-ignore
+  //   const target = obj.constructor.prototype[propertyName];
+  //   defineCtx(target, parent, obj);
+  //   return target;
+  // }
+  // const isPrototype = propertyName === 'prototype';
+  // if (isPrototype) {
+  //   return new Prototype(obj);
+  // }
   /*
   function MyFunction(){
   }

@@ -1,6 +1,6 @@
 {
   "name": "jsvm2",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Javascript Interpreter implemented by Javascript",
   "main": "lib/index.js",
   "module": "lib/es.es6.js",
@@ -9,6 +9,7 @@
     "build": "rollup -c",
     "test:coverage": "jest --coverage",
     "test": "jest",
+    "test:debug": "npx --node-arg=--inspect-brk jest -i",
     "babel": "babel --config-file babel.config.js ./babel/src --out-dir ./babel/result",
     "typecheck": "tsc --project tsconfig.json --noEmit #",
     "report-coverage": "cat ./coverage/lcov.info | coveralls"

@@ -1,17 +1,17 @@
 export function ErrNotDefined(varName: string): ReferenceError {
-  return new ReferenceError(`${varName} is not defined`);
+  return new ReferenceError(`[jsvm] ${varName} is not defined`);
 }
 
 export function ErrDuplicateDeclare(varName: string): SyntaxError {
-  return new SyntaxError(`Identifier '${varName}' has already been declared`);
+  return new SyntaxError(`[jsvm] Identifier '${varName}' has already been declared`);
 }
 
 export function ErrImplement(varName: string): SyntaxError {
-  return new SyntaxError(`Not implement for '${varName}' syntax`);
+  return new SyntaxError(`[jsvm] Not implement for '${varName}' syntax`);
 }
 
 export function ErrIsNot(name: string, type: string): TypeError {
-  return new TypeError(`${name} is not ${type}`);
+  return new TypeError(`[jsvm] ${name} is not ${type}`);
 }
 
 export function ErrInvalidIterable(name): TypeError {
@@ -19,9 +19,9 @@ export function ErrInvalidIterable(name): TypeError {
 }
 
 export function ErrIsNotFunction(name: string): ReferenceError {
-  return new TypeError(`${name} is not a function`);
+  return new TypeError(`[jsvm] ${name} is not a function`);
 }
 
 export function ErrCanNotReadProperty(property: string, target: string): ReferenceError {
-  return new TypeError(`Cannot read property '${property}' of ${target}`);
+  return new TypeError(`[jsvm] Cannot read property '${property}' of ${target}`);
 }

@@ -1,6 +1,6 @@
 import * as t from '@babel/types';
 import { Path } from '../../path';
-import { isIdentifier, isMemberExpression, isStringLiteral } from '../babelTypes';
+import { isIdentifier, isMemberExpression, isStringLiteral, isThisExpression } from '../babelTypes';
 import { functionThis, isFunction, overrideStack, runtimeThis } from '../utils';
 import { ErrIsNotFunction } from '../../error';
 import { ANONYMOUS } from '../../constants';
@@ -14,15 +14,19 @@ export function CallExpression(path: Path<t.CallExpression>) {
   let propertyName = '';
   const functionName: string = isMemberExpression(node.callee)
     ? (() => {
+        const callee = isThisExpression(node.callee.object)
+          ? 'this'
+          : (node.callee.object as any).name;
         if (isIdentifier(node.callee.property)) {
           // console.log("hello world")
           propertyName = node.callee.property.name;
-          return `${(node.callee.object as any).name}.${propertyName}`;
+          return `${callee}.${propertyName}`;
         } else if (isStringLiteral(node.callee.property)) {
           // console["log"]("123");
           propertyName = node.callee.property.value;
-          return `${(node.callee.object as any).name}["${propertyName}"]`;
-        } else {
+          return `${callee}["${propertyName}"]`;
+        }
+        {
           return 'undefined';
         }
       })()

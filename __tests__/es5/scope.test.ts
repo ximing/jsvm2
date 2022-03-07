@@ -50,7 +50,7 @@ describe('for scope spec:', () => {
     expect($newVar.value).toEqual('hello');
   });
 
-  it(`let can't be redeclare`, () => {
+  it("let can't be redeclare", () => {
     const scope = new Scope(ScopeType.Root, null);
     expect(scope.declareVar('name', 'ximing')).toBeTruthy();
 
@@ -63,7 +63,7 @@ describe('for scope spec:', () => {
     }).toThrowError(ErrDuplicateDeclare('name').message);
   });
 
-  it(`const can't be redeclare`, () => {
+  it("onst can't be redeclare", () => {
     const scope = new Scope(ScopeType.Root, null);
     scope.declareVar('name', 'ximing');
     const $var: any = scope.hasOwnBinding('name');
@@ -108,7 +108,7 @@ describe('for scope spec:', () => {
 });
 
 describe('function', function () {
-  it(`function have it's own scope with var`, function () {
+  it("function have it's own scope with var", function () {
     const res = run(`
     var a = 1;
     function get(){
@@ -124,7 +124,7 @@ describe('function', function () {
     expect(res.getA()).toEqual(1);
   });
 
-  it(`function have it's own scope with let`, function () {
+  it("function have it's own scope with let", function () {
     const res = run(`
     var a = 1;
     function get(){
@@ -140,7 +140,7 @@ describe('function', function () {
     expect(res.getA()).toEqual(1);
   });
 
-  it(`function have it's own scope with const`, function () {
+  it("function have it's own scope with const", function () {
     const res = run(`
     var a = 1;
     function get(){
@@ -212,15 +212,21 @@ describe('while', () => {
   });
 
   it('variables with the same name in the while scope and the parent scope', function () {
-    expect(() =>
-      run(`
-    let a = 1; 
+    expect(
+      () =>
+        run(
+          `
+    let a = 1;
     while(true){
       var a = 2;// error duplicate declare
       break;
     }
-    `)
-    ).toThrowError(ErrDuplicateDeclare('a').message);
+    `,
+          {},
+          false
+        )
+      // ).toThrowError(ErrDuplicateDeclare('a').message);
+    ).toThrowError(`Identifier 'a' has already been declared`);
   });
 });
 
@@ -277,15 +283,21 @@ describe('do while', () => {
   });
 
   it('variables with the same name in the while scope and the parent scope', function () {
-    expect(() =>
-      run(`
-    let a = 1; 
+    expect(
+      () =>
+        run(
+          `
+    let a = 1;
     do{
       var a = 2;// error duplicate declare
       break;
     }while(false)
-    `)
-    ).toThrowError(ErrDuplicateDeclare('a').message);
+    `,
+          {},
+          false
+        )
+      // ).toThrowError(ErrDuplicateDeclare('a').message);
+    ).toThrowError(`Identifier 'a' has already been declared`);
   });
 });
 
@@ -344,15 +356,21 @@ describe('for', () => {
   });
 
   it('variables with the same name in the while scope and the parent scope', function () {
-    expect(() =>
-      run(`
-    let a = 1; 
+    expect(
+      () =>
+        run(
+          `
+    let a = 1;
     for(;;){
       var a = 2;// error duplicate declare
       break;
     }
-    `)
-    ).toThrowError(ErrDuplicateDeclare('a').message);
+    `,
+          {},
+          false
+        )
+      // ).toThrowError(ErrDuplicateDeclare('a').message);
+    ).toThrowError(`Identifier 'a' has already been declared`);
   });
 });
 
@@ -402,8 +420,10 @@ describe('try catch', function () {
   });
 
   it('duplicate declare ', function () {
-    expect(() =>
-      run(`
+    expect(
+      () =>
+        run(
+          `
         const a = 1;
         try{
           var a = 2;
@@ -411,7 +431,11 @@ describe('try catch', function () {
           throw err;
         }
         module.exports = {a: a};
-`)
-    ).toThrowError(ErrDuplicateDeclare('a').message);
+`,
+          {},
+          false
+        )
+      // ).toThrowError(ErrDuplicateDeclare('a').message);
+    ).toThrowError(`Identifier 'a' has already been declared`);
   });
 });

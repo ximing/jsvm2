@@ -28,10 +28,12 @@ export function defineFunction(func, node, name?) {
   });
 }
 
-export class Prototype {
-  // @ts-ignore
-  constructor(public constructor) {}
-}
+// export class Prototype {
+//   // @ts-ignore
+//   constructor(public constructor) {
+//     this.constructor = constructor;
+//   }
+// }
 
 export class This {
   constructor(public context) {}
@@ -40,3 +42,5 @@ export class This {
 export const functionThis = new WeakMap();
 
 export const runtimeThis = new WeakMap();
+
+export const newFunction = new WeakMap();
