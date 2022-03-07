@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import { Path } from '../../path';
 import { isIdentifier, isMemberExpression, isStringLiteral, isThisExpression } from '../babelTypes';
-import { functionThis, isFunction, overrideStack, runtimeThis } from '../utils';
+import { isFunction, overrideStack, runtimeThis } from '../utils';
 import { ErrIsNotFunction } from '../../error';
 import { ANONYMOUS } from '../../constants';
 
@@ -34,12 +34,12 @@ export function CallExpression(path: Path<t.CallExpression>) {
       (node.callee as t.Identifier).name;
   /*
    * 有三种情况
-   * 1. 直接执行函数 setTimeout(()=>{},0)     this在函数定义时
-   * 2. plain Object 内执行对象               运行时再确定
+   * 1. 直接执行函数 setTimeout(()=>{},0)        this在函数定义时
+   * 2. plain Object 内执行对象                  运行时再确定
    *    var obj = {
-   *       fn(){},                           运行时再确定  MemberExpression
-   *       fn:()=>{}  // 这种this会被babel处理，可以不考虑
-   *       fn:function(){}                    运行时再确定  MemberExpression
+   *       fn(){},                             运行时再确定  MemberExpression
+   *       fn:()=>{}  // 这种this会被babel处理， 可以不考虑
+   *       fn:function(){}                     运行时再确定  MemberExpression
    *     }
    *    obj.fn();
    * 3. class 情况
@@ -91,7 +91,8 @@ export function CallExpression(path: Path<t.CallExpression>) {
   }
   // const thisVar = scope.hasOwnBinding(THIS);
   // let context: any = (node as any).$ctx$ || functionThis.get(func) || undefined;
-  let context: any = runtimeThis.get(node) || functionThis.get(func) || undefined;
+  // let context: any = runtimeThis.get(node) || functionThis.get(func) || undefined;
+  let context: any = runtimeThis.get(node) || undefined;
   try {
     const result = func.apply(context, args);
     if (result instanceof Error) {

@@ -1,6 +1,6 @@
 {
   "name": "jsvm2",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Javascript Interpreter implemented by Javascript",
   "main": "lib/index.js",
   "module": "lib/es.es6.js",

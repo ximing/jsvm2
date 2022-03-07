@@ -4,7 +4,7 @@ import { Path } from '../../path';
 import { ARGUMENTS, NEW, THIS } from '../../constants';
 import { isAssignmentPattern, isIdentifier, isRestElement } from '../babelTypes';
 import { Signal } from '../../signal';
-import { defineFunction, functionThis, newFunction } from '../utils';
+import { defineFunction, newFunction } from '../utils';
 
 // TODO toString() 不准确
 
@@ -70,12 +70,13 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
     }
   };
   defineFunction(func, node);
-  const thisVar = scope.hasBinding(THIS);
+  // const thisVar = scope.hasBinding(THIS);
   // 定义时候的this
   // func.$this$ = thisVar ? thisVar.value : undefined;
-  if (thisVar) {
-    functionThis.set(func, thisVar.value);
-  }
+  // if (thisVar) {
+  //   functionThis.set(func, thisVar.value);
+  //   debugger
+  // }
   if (functionName) {
     scope.declareVar(functionName, func);
   }

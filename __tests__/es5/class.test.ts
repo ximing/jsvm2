@@ -93,6 +93,9 @@ describe('class spec:', () => {
 
   it('parasitic combination inheritance', () => {
     const res = run(`
+      function fn(){
+        return this;
+      }
       function _inherits(subClass, superClass) {
         subClass.prototype = Object.create(superClass && superClass.prototype, {
           constructor: {
@@ -116,13 +119,18 @@ describe('class spec:', () => {
           this.n = this.getName()
       }
       _inherits(Child, Parent);      
+      Child.prototype.getThis = function () {
+          return fn();
+      }
       var child1 = new Child('ximing', '28');
        module.exports = {
           name: child1.getName(),
-          n: child1.n
+          n: child1.n,
+          t: child1.getThis()
        }
 `);
     expect(res.name).toEqual('ximing');
     expect(res.n).toEqual('ximing');
+    expect(res.t).toEqual(undefined);
   });
 });

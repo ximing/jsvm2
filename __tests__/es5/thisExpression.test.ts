@@ -183,4 +183,50 @@ describe('this expression spec:', () => {
     expect(res.temp).toEqual('e');
     expect(res.b instanceof res.A).toEqual(true);
   });
+
+  it('this case1', function () {
+    const res = run(`
+      var foo = {
+        fn: function(){
+          function n(){
+            return this;
+          }
+          return n();
+        }
+      }
+      module.exports = foo.fn();
+    `);
+    expect(res).toEqual(undefined);
+  });
+
+  it('this case2', function () {
+    const res = run(`
+      const foo = {
+        fn: function(){
+          const self = this;
+          function n(){
+            return self;
+          }
+          return n();
+        }
+      }
+      module.exports = foo.fn() === foo;
+    `);
+    expect(res).toEqual(true);
+  });
+
+  it('this case3', function () {
+    const res = run(`
+      function n(){
+          return this;
+      }
+      var foo = {
+        fn: function(){
+          return n();
+        }
+      }
+      module.exports = foo.fn();
+    `);
+    expect(res).toEqual(undefined);
+  });
 });
