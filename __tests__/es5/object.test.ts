@@ -39,7 +39,7 @@ describe('object spec:', () => {
           }
         }
          module.exports = {
-            name: new Person('Ben', 21, 'student')
+            p: new Person('Ben', 21, 'student')
          }
   `);
     expect(res.p.name).toEqual('Ben');
@@ -61,9 +61,9 @@ describe('object spec:', () => {
           p: new Person()
        }
 `);
-    expect(res.p.name).toEqual('Ben');
-    expect(res.p.age).toEqual(21);
-    expect(res.p.sayName()).toEqual('Ben');
+    expect(res.p.name).toEqual('Uzi');
+    expect(res.p.age).toEqual(22);
+    expect(res.p.sayName()).toEqual('Uzi');
   });
 
   it('combination constructor and prototype', () => {
