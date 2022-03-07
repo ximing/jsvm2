@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import { ErrCanNotReadProperty } from '../../error';
 import { Path } from '../../path';
-import { isCallExpression, isIdentifier } from '../babelTypes';
+import { isCallExpression } from '../babelTypes';
 import { isFunction, runtimeThis } from '../utils';
 
 function defineCtx(target: any, parent: any, ctx: any) {
