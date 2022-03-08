@@ -168,4 +168,11 @@ describe('function spec:', () => {
     `);
     expect(res).toEqual(undefined);
   });
+
+  it('string prototype', function () {
+    const res = run(`
+        module.exports = "".concat(1,2,3);
+    `);
+    expect(res).toEqual('123');
+  });
 });

@@ -92,7 +92,7 @@ export function CallExpression(path: Path<t.CallExpression>) {
   // const thisVar = scope.hasOwnBinding(THIS);
   // let context: any = (node as any).$ctx$ || functionThis.get(func) || undefined;
   // let context: any = runtimeThis.get(node) || functionThis.get(func) || undefined;
-  let context: any = runtimeThis.get(node) || undefined;
+  let context: any = runtimeThis.has(node) ? runtimeThis.get(node) : undefined;
   try {
     const result = func.apply(context, args);
     if (result instanceof Error) {
