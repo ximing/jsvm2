@@ -9,6 +9,8 @@ https://tc39.es/ecma262
 
 ## 支持能力
 
+注：引擎表现为严格模式
+
 ### ES5
 
 - [x] File
@@ -100,7 +102,7 @@ https://tc39.es/ecma262
 - [ ]Decorator
 
 ## Test
-
+- [es5-testsuite](https://github.com/kangax/es5-testsuite)
 - [ECMAScript Test262](http://test262.ecmascript.org/)
 - JS 面试题
 - 高程内 CASE

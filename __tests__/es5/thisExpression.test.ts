@@ -229,4 +229,19 @@ describe('this expression spec:', () => {
     `);
     expect(res).toEqual(undefined);
   });
+
+  it('this expression', () => {
+    const func = run(
+      `
+function t(){
+  this.name = "hello";
+  return this;
+}
+ module.exports = t;
+  `
+    );
+    const ctx: { [x: string]: any } = {};
+    func.call(ctx);
+    expect(ctx.name).toEqual('hello');
+  });
 });

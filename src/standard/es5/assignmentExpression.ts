@@ -62,7 +62,7 @@ export const AssignmentExpressionMap = {
 };
 
 export function AssignmentExpression(path: Path<types.AssignmentExpression>) {
-  const { node, scope } = path;
+  const { node, scope, ctx } = path;
   // @ts-ignore
   let $var: Var = {
     kind: Kind.var,
@@ -82,11 +82,16 @@ export function AssignmentExpression(path: Path<types.AssignmentExpression>) {
     rightValue = path.visitor(path.createChild(node.right));
 
     if (!v) {
-      const globalScope = scope.global;
-      globalScope.declareVar(name, path.visitor(path.createChild(node.right)));
-      const globalVar = globalScope.hasBinding(name);
-      if (globalVar) {
-        $var = globalVar;
+      if (ctx.wxml) {
+        // 非严格模式
+        const globalScope = scope.global;
+        globalScope.declareVar(name, path.visitor(path.createChild(node.right)));
+        const globalVar = globalScope.hasBinding(name);
+        if (globalVar) {
+          $var = globalVar;
+        } else {
+          throw overrideStack(ErrNotDefined(name), path.stack, node.right);
+        }
       } else {
         throw overrideStack(ErrNotDefined(name), path.stack, node.right);
       }

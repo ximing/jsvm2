@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import { Path } from '../../path';
 import { THIS, UNDEFINED } from '../../constants';
-import { isIdentifier, isMemberExpression } from '../babelTypes';
+import { isIdentifier, isLiteral, isMemberExpression, isNullLiteral } from '../babelTypes';
 
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Expressions_and_Operators#delete
 // https://www.w3school.com.cn/js/pro_js_operators_unary.asp
@@ -21,12 +21,21 @@ export function UnaryExpression(path: Path<t.UnaryExpression>) {
       } else if (isIdentifier(node.argument)) {
         const $this = scope.hasBinding(THIS);
         if ($this) {
+          // 非严格模式
           return $this.value[node.argument.name];
         } else {
           console.error('jsvm illegal this');
         }
+      } else if (isLiteral(node.argument)) {
+        if (isNullLiteral(node.argument)) {
+          // @ts-ignore
+          return delete null;
+        }
+        // @ts-ignore
+        return delete node.argument.value;
       } else {
-        console.error('jsvm illegal delete');
+        // @ts-ignore
+        return delete path.visitor(path.createChild(node.argument));
       }
     },
     typeof: (): string => {

@@ -40,16 +40,17 @@ export function ObjectExpression(path: Path<types.ObjectExpression>) {
   }
 * */
 export function ObjectProperty(path: Path<types.ObjectProperty>) {
-  const { node, ctx } = path;
+  const { node, ctx, scope } = path;
   const { object } = ctx;
   const { value, key } = node;
-  const val = path.visitor(path.createChild(value));
+  let _key = '';
   if (isIdentifier(key) && !node.computed) {
-    object[key.name] = val;
+    _key = key.name;
     // scope.declareVar(key.name, val);
   } else {
-    object[path.visitor(path.createChild(node.key))] = val;
+    _key = path.visitor(path.createChild(node.key));
   }
+  object[_key] = path.visitor(path.createChild(value, scope, { functionName: _key }));
 }
 
 export function ObjectMethod(path: Path<types.ObjectMethod>) {

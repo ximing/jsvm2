@@ -19,9 +19,9 @@ export function FunctionDeclaration(path: Path<t.FunctionDeclaration>) {
 }
 
 export function FunctionExpression(path: Path<t.FunctionExpression>) {
-  const { node, scope, stack } = path;
+  const { node, scope, stack, ctx } = path;
   // 处理匿名函数
-  const functionName = node.id ? node.id.name : '';
+  const functionName = node.id ? node.id.name : ctx.functionName || '';
   let shouldReturnInstance = false;
   // 这里改动要同步到object ObjectMethod 一份
   const func = function (this: any, ...args) {
@@ -69,7 +69,7 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
       return result;
     }
   };
-  defineFunction(func, node);
+  defineFunction(func, node, functionName);
   // const thisVar = scope.hasBinding(THIS);
   // 定义时候的this
   // func.$this$ = thisVar ? thisVar.value : undefined;
@@ -77,7 +77,7 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
   //   functionThis.set(func, thisVar.value);
   //   debugger
   // }
-  if (functionName) {
+  if (node.id) {
     scope.declareVar(functionName, func);
   }
 

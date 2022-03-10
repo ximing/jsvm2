@@ -21,7 +21,9 @@ export function VariableDeclaration(path: Path<t.VariableDeclaration>) {
        */
       if (declarator.init || kind !== Kind.var) {
         map[declarator.id.name] = declarator.init
-          ? path.visitor(path.createChild(declarator.init))
+          ? path.visitor(
+              path.createChild(declarator.init, scope, { functionName: declarator.id.name })
+            )
           : undefined;
       }
     } else if (isObjectPattern(declarator.id)) {

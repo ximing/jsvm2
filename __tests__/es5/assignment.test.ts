@@ -22,12 +22,12 @@ describe('assignment spec:', () => {
   });
 
   it('base global', () => {
-    expect(
+    expect(() =>
       run(`
       a = 1;
       module.exports = a;
     `)
-    ).toEqual(1);
+    ).toThrowError(ErrNotDefined('a').message);
   });
 
   it('not defined', () => {

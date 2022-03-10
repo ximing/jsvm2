@@ -4,7 +4,7 @@ import {
   // ArrayExpression,
   CallExpression,
   // ClassMethod,
-  ClassProperty,
+  // ClassProperty,
   FunctionDeclaration,
   Identifier,
   // ImportDefaultSpecifier,
@@ -30,6 +30,32 @@ export function isIdentifier(node: Node): node is Identifier {
 
 export function isStringLiteral(node: Node): node is StringLiteral {
   return is(node, 'StringLiteral');
+}
+
+export function isRegExpLiteral(node: Node): node is StringLiteral {
+  return is(node, 'RegExpLiteral');
+}
+
+export function isNumericLiteral(node: Node): node is StringLiteral {
+  return is(node, 'NumericLiteral');
+}
+
+export function isBooleanLiteral(node: Node): node is StringLiteral {
+  return is(node, 'BooleanLiteral');
+}
+
+export function isNullLiteral(node: Node): node is StringLiteral {
+  return is(node, 'NullLiteral');
+}
+
+export function isLiteral(node: Node): node is StringLiteral {
+  return (
+    isNullLiteral(node) ||
+    isBooleanLiteral(node) ||
+    isNumericLiteral(node) ||
+    isRegExpLiteral(node) ||
+    isStringLiteral(node)
+  );
 }
 
 // export function isObjectExpression(node: Node): node is ObjectExpression {
@@ -81,9 +107,9 @@ export function isRestElement(node: Node): node is RestElement {
   return is(node, 'RestElement');
 }
 
-export function isClassProperty(node: Node): node is ClassProperty {
-  return is(node, 'ClassProperty');
-}
+// export function isClassProperty(node: Node): node is ClassProperty {
+//   return is(node, 'ClassProperty');
+// }
 
 // export function isClassMethod(node: Node): node is ClassMethod {
 //   return is(node, 'ClassMethod');

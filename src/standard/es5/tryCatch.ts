@@ -15,6 +15,7 @@ export function CatchClause(path: Path<t.CatchClause>) {
 export function TryStatement(path: Path<t.TryStatement>) {
   const { node, scope } = path;
   try {
+    // 参考 https://blog.csdn.net/weixin_42733155/article/details/85218885
     const tryScope = scope.createChild(ScopeType.Block);
     // tryScope.invasive = true;
     // tryScope.isolated = false;
@@ -25,7 +26,7 @@ export function TryStatement(path: Path<t.TryStatement>) {
       const catchScope = scope.createChild(ScopeType.Block);
       // catchScope.invasive = true;
       // catchScope.isolated = false;
-      catchScope.declareConst(param.name, err);
+      catchScope.declareLet(param.name, err);
       return path.visitor(path.createChild(node.handler!, catchScope));
     } else {
       throw err;
