@@ -22,6 +22,7 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
   const { node, scope, stack, ctx } = path;
   // 处理匿名函数
   const functionName = node.id ? node.id.name : ctx.functionName || '';
+  ctx.functionName && delete ctx.functionName;
   let shouldReturnInstance = false;
   // 这里改动要同步到object ObjectMethod 一份
   const func = function (this: any, ...args) {

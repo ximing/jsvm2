@@ -61,9 +61,12 @@ export function CallExpression(path: Path<t.CallExpression>) {
    * 4. class constructor
    *    new  jsvm运行时确定  MemberExpression
    * */
-  // 顺序不能乱，只需要对执行的函数的cts做提前确定，参数里面也可能有函数表达式 比如 obj2.doFoo(obj.foo)
-  const args = node.arguments.map((arg) => path.visitor(path.createChild(arg)));
+  // 顺序不能乱，需要对执行的函数的cts做提前确定，
+  // 参数里面也可能有函数表达式 比如 obj2.doFoo(obj.foo)
+  // 左值也可能有表达式 var a; (a=b).fn.apply(a);
+  // 所以先取左值，然后memberExpression里面作判定，已经有值的时候就不重复设置了，在获取context的时候取完销毁，从而做到一次运行只取一次
   const func = path.visitor(path.createChild(node.callee));
+  const args = node.arguments.map((arg) => path.visitor(path.createChild(arg)));
   const isValidFunction = isFunction(func) as boolean;
   if (isMemberExpression(node.callee)) {
     if (!isValidFunction) {
@@ -92,7 +95,11 @@ export function CallExpression(path: Path<t.CallExpression>) {
   // const thisVar = scope.hasOwnBinding(THIS);
   // let context: any = (node as any).$ctx$ || functionThis.get(func) || undefined;
   // let context: any = runtimeThis.get(node) || functionThis.get(func) || undefined;
-  let context: any = runtimeThis.has(node) ? runtimeThis.get(node) : undefined;
+  let context: any = undefined;
+  if (runtimeThis.has(node)) {
+    context = runtimeThis.get(node);
+    runtimeThis.delete(node);
+  }
   try {
     const result = func.apply(context, args);
     if (result instanceof Error) {

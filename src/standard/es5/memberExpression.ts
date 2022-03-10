@@ -5,7 +5,12 @@ import { isCallExpression } from '../babelTypes';
 import { isFunction, runtimeThis } from '../utils';
 
 function defineCtx(target: any, parent: any, ctx: any) {
-  if (isFunction(target) && parent && isCallExpression(parent.node)) {
+  if (
+    isFunction(target) &&
+    parent &&
+    isCallExpression(parent.node) &&
+    !runtimeThis.has(parent.node)
+  ) {
     // (parent.node as any).$ctx$ = ctx;
     runtimeThis.set(parent.node, ctx);
     // parent.scope.declareConst(THIS, obj);
