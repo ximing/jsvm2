@@ -39,12 +39,12 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
 
     const funcScope = scope.createChild(ScopeType.Function);
     if (node.id && isFunctionExpression(node)) {
-      funcScope.declareVar((node as any).id.name, func);
+      funcScope.declareVar((node as any).id.name, func, funcScope);
     }
     for (let i = 0; i < node.params.length; i++) {
       const param = node.params[i];
       if (isIdentifier(param)) {
-        funcScope.declareLet(param.name, args[i]);
+        funcScope.declareVar(param.name, args[i], funcScope);
       } else if (isAssignmentPattern(param)) {
         // @es2015 default parameters
         path.visitor(path.createChild(param, funcScope, { value: args[i] }));

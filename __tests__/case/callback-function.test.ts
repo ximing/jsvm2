@@ -64,4 +64,16 @@ module.exports = a()
     );
     expect(res).toEqual(1);
   });
+
+  it('define case5', function () {
+    const res = run(
+      `
+var b = function a(a) {
+  return a;
+}
+module.exports = b(1)
+  `
+    );
+    expect(res).toEqual(1);
+  });
 });

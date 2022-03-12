@@ -88,13 +88,17 @@ export class Scope {
    * @returns {boolean}
    * @memberof Scope
    */
-  public declareVar(varName: string, value: any): boolean {
-    let targetScope: Scope = this;
+  public declareVar(varName: string, value: any, scope?: Scope): boolean {
+    /*
+     * 考虑 var b = function a(a) { return a; } 这种情况，必须让 function作用域的 param和function 被定义到 functionScope的 var属性上
+     * 才能让  param 复写 a的同时不会触发重命名的问题
+     * */
+    let targetScope: Scope = scope || this;
 
     // Hoisting
     // 1. if the current scope is top-level scope
     // 2. if the current scope type is one of types `function`, `constructor`
-    while (targetScope.parent !== null && !targetScope.isolated) {
+    while (!scope && targetScope.parent !== null && !targetScope.isolated) {
       targetScope = targetScope.parent;
     }
 
