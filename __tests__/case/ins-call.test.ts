@@ -19,7 +19,6 @@ var _PopLogic = /*#__PURE__*/ (function () {
         popupRender: {
           b: 1,
           test() {
-            console.log(this)
             return this.b;
           },
           p: {

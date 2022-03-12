@@ -2,7 +2,12 @@ import * as t from '@babel/types';
 import { ScopeType } from '../../types';
 import { Path } from '../../path';
 import { ARGUMENTS, NEW, THIS } from '../../constants';
-import { isAssignmentPattern, isIdentifier, isRestElement } from '../babelTypes';
+import {
+  isAssignmentPattern,
+  isFunctionExpression,
+  isIdentifier,
+  isRestElement,
+} from '../babelTypes';
 import { Signal } from '../../signal';
 import { defineFunction, newFunction } from '../utils';
 
@@ -33,6 +38,9 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
     // args.length && args[args.length - 1] instanceof This && args.pop();
 
     const funcScope = scope.createChild(ScopeType.Function);
+    if (node.id && isFunctionExpression(node)) {
+      funcScope.declareVar((node as any).id.name, func);
+    }
     for (let i = 0; i < node.params.length; i++) {
       const param = node.params[i];
       if (isIdentifier(param)) {
@@ -78,9 +86,6 @@ export function FunctionExpression(path: Path<t.FunctionExpression>) {
   //   functionThis.set(func, thisVar.value);
   //   debugger
   // }
-  if (node.id) {
-    scope.declareVar(functionName, func);
-  }
 
   return func;
 }

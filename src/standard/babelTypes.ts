@@ -70,6 +70,10 @@ export function isFunctionDeclaration(node: Node): node is FunctionDeclaration {
   return is(node, 'FunctionDeclaration');
 }
 
+export function isFunctionExpression(node: Node): node is FunctionDeclaration {
+  return is(node, 'FunctionExpression');
+}
+
 export function isVariableDeclaration(node: Node): node is VariableDeclaration {
   return is(node, 'VariableDeclaration');
 }

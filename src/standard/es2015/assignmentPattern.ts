@@ -2,9 +2,10 @@ import * as t from '@babel/types';
 import { Path } from '../../path';
 import { isIdentifier } from '../babelTypes';
 import { ErrImplement } from '../../error';
+import { overrideStack } from '../utils';
 
 export function AssignmentPattern(path: Path<t.AssignmentPattern>) {
-  const { node, scope, ctx } = path;
+  const { node, scope, ctx, stack } = path;
   const { value } = ctx;
   if (isIdentifier(node.left)) {
     scope.declareConst(
@@ -12,6 +13,6 @@ export function AssignmentPattern(path: Path<t.AssignmentPattern>) {
       value === undefined ? path.visitor(path.createChild(node.right)) : value
     );
   } else {
-    throw ErrImplement(`AssignmentPattern.${node.type}`);
+    throw overrideStack(ErrImplement(`AssignmentPattern.${node.type}`), stack, node);
   }
 }

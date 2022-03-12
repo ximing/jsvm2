@@ -2,7 +2,7 @@ import * as t from '@babel/types';
 import { ErrCanNotReadProperty } from '../../error';
 import { Path } from '../../path';
 import { isCallExpression } from '../babelTypes';
-import { isFunction, runtimeThis } from '../utils';
+import { isFunction, overrideStack, runtimeThis } from '../utils';
 
 function defineCtx(target: any, parent: any, ctx: any) {
   if (
@@ -17,7 +17,7 @@ function defineCtx(target: any, parent: any, ctx: any) {
   }
 }
 export function MemberExpression(path: Path<t.MemberExpression>) {
-  const { node, ctx, parent } = path;
+  const { node, ctx, parent, stack } = path;
   // https://doc.esdoc.org/github.com/mason-lang/esast/class/src/ast.js~MemberExpression.html
   // If computed === true, object[property]. Else, object.property -- meaning property should be an Identifier.
   const { object, property, computed } = node;
@@ -26,11 +26,11 @@ export function MemberExpression(path: Path<t.MemberExpression>) {
     : (property as t.Identifier).name;
   const obj = path.visitor(path.createChild(object));
   if (obj === undefined) {
-    throw ErrCanNotReadProperty(propertyName, 'undefined');
+    throw overrideStack(ErrCanNotReadProperty(propertyName, 'undefined'), stack, node);
   }
   if (obj === null) {
     if (ctx.wxml) return undefined;
-    throw ErrCanNotReadProperty(propertyName, 'null');
+    throw overrideStack(ErrCanNotReadProperty(propertyName, 'null'), stack, node);
   }
 
   /*

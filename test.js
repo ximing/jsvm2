@@ -1,27 +1,19 @@
 'use strict';
-var popupRender = {
-  b: 1,
-  test() {
-    return this.b;
-  },
-  p: {
-    c() {
-      return {
-        b: 1,
-        test() {
-          return this.b;
-        },
-      };
-    },
-  },
+function b(cb) {
+  return cb;
+}
+function a(e) {
+  b((b = 1));
+  // arg
+  return b;
+}
+var d = function c() {
+  // var c = 2;
+  console.log(c === d);
 };
-var _PopLogic = /*#__PURE__*/ (function () {
-  function _PopLogic() {}
-  var _proto12 = _PopLogic.prototype;
-  _proto12.useRenderFunc = function useRenderFunc(funcName) {
-    var _this$popupController;
-    return (_this$popupController = popupRender)[funcName].apply(_this$popupController, []);
-  };
-  return _PopLogic;
+
+(function f() {
+  console.log(f);
 })();
-console.log(new _PopLogic().useRenderFunc('test'));
+
+d();

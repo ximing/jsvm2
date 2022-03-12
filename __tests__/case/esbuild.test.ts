@@ -135,7 +135,6 @@ describe('esbuild spec:', () => {
       UserBehavior2[UserBehavior2["CLOSE"] = 3] = "CLOSE";
     })(_UserBehavior || (_UserBehavior = {}));
 `);
-    console.log(res);
     expect(res.Sequence.MONTH_CARD).toEqual('memberEntranceInfoVO');
   });
 });
