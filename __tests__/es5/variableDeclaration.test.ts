@@ -31,7 +31,7 @@ describe('variable spec:', () => {
           global: 2,
         }
       )
-    ).toEqual(2);
+    ).toEqual(1);
   });
 
   it('context replace var', function () {

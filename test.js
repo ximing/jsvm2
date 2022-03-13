@@ -1,5 +1,4 @@
 'use strict';
-var b = function a(a) {
-  return a;
-}
-b(1)
+let Math = 1;
+console.log(Math)
+module.exports = global;

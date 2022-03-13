@@ -5,6 +5,7 @@ describe('warp', () => {
     const exports: any = {};
     const res = run(
       `
+      var e = {};
       define('a',function(exports,require){
         var PopCreater = {
           createRender(){
@@ -13,8 +14,9 @@ describe('warp', () => {
         }
         exports.PopCreater = PopCreater;
         exports.res1 = PopCreater.createRender({s:3});
+        e = exports;
       })
-      module.exports = exports.PopCreater.createRender({ s: 2 });
+      module.exports = e.PopCreater.createRender({ s: 2 });
   `,
       {
         define(id, callback) {

@@ -108,15 +108,16 @@ export class Scope {
         // only cover var with var, not const and let
         throw ErrDuplicateDeclare(varName);
       } else {
-        if (targetScope.level === 0 && targetScope.context[varName]) {
-          // top level context can not be cover
-          // here we do nothing
-          // TODO strict mode?
-        } else {
-          // new var cover the old var
-          // targetScope.data[varName] = new Var(Kind.var, varName, value);
-          targetScope.data.set(varName, new Var(Kind.var, varName, value));
-        }
+        targetScope.data.set(varName, new Var(Kind.var, varName, value));
+        // if (targetScope.level === 0 && targetScope.context[varName]) {
+        //   // top level context can not be cover
+        //   // here we do nothing
+        //   // TODO strict mode?
+        // } else {
+        //   // new var cover the old var
+        //   // targetScope.data[varName] = new Var(Kind.var, varName, value);
+        //   targetScope.data.set(varName, new Var(Kind.var, varName, value));
+        // }
       }
     } else {
       // set the new var

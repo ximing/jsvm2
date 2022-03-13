@@ -3,6 +3,25 @@ import { createContext, runInContext, run as VMRun } from '../src/vm';
 
 const babel = require('@babel/core');
 
+function minifySync(code: string) {
+  const child_process = require('child_process');
+  let out = '';
+  try {
+    out = child_process.execSync('node __tests__/minifysync.js', {
+      input: code,
+      encoding: 'utf-8',
+      //timeout: Infinity,
+      maxBuffer: Infinity,
+      windowsHide: true, // windows os
+    });
+  } catch (error) {
+    // timeout, exit(1), exit(2)
+    console.log('error in minify:\n' + error.stdout);
+    throw new Error('minify failed');
+  }
+  return out;
+}
+
 export const run = function (code, ctx = {}, hoisting = true, convertES5 = false) {
   let transformCode = code;
   if (convertES5) {
@@ -47,12 +66,20 @@ export const run = function (code, ctx = {}, hoisting = true, convertES5 = false
     });
     transformCode = result.code;
   }
-  const ast = parse(transformCode, {
-    sourceType: 'module',
-    plugins: [],
-  });
-  const sandbox: any = createContext(ctx);
-  return runInContext(ast, sandbox);
+  try {
+    if (process.env.TERSER === 'true') {
+      transformCode = minifySync(transformCode);
+    }
+    const ast = parse(transformCode, {
+      sourceType: 'module',
+      plugins: [],
+    });
+    const sandbox: any = createContext(ctx);
+    return runInContext(ast, sandbox);
+  } catch (err) {
+    console.log(transformCode);
+    throw err;
+  }
 };
 
 export const runExp = function (code: string, ctx = {}) {
