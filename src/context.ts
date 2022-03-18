@@ -62,7 +62,7 @@ if (typeof Symbol !== UNDEFINED) {
 }
 
 if (typeof Int8Array !== UNDEFINED) {
-  CTX.Int32Array = Int8Array;
+  CTX.Int8Array = Int8Array;
 }
 
 if (typeof Uint8Array !== UNDEFINED) {
