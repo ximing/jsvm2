@@ -5,14 +5,16 @@ describe('dev', function () {
     expect(
       run(
         `
-    var global = 1;
-    console.log(global)
-    module.exports = global;
+    var a = [];
+    function b(){
+      return 1;
+    }
+    module.exports = a.concat(b());
     `,
         {
           global: 2,
         }
       )
-    ).toEqual(1);
+    ).toEqual([1]);
   });
 });

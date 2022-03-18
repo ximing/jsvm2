@@ -96,9 +96,9 @@ export function CallExpression(path: Path<t.CallExpression>) {
   // let context: any = (node as any).$ctx$ || functionThis.get(func) || undefined;
   // let context: any = runtimeThis.get(node) || functionThis.get(func) || undefined;
   let context: any = undefined;
-  if (runtimeThis.has(node)) {
-    context = runtimeThis.get(node);
-    runtimeThis.delete(node);
+  if (runtimeThis.has(path)) {
+    context = runtimeThis.get(path);
+    runtimeThis.delete(path);
   }
   try {
     const result = func.apply(context, args);

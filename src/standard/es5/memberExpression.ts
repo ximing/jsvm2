@@ -9,10 +9,10 @@ function defineCtx(target: any, parent: any, ctx: any) {
     isFunction(target) &&
     parent &&
     isCallExpression(parent.node) &&
-    !runtimeThis.has(parent.node)
+    !runtimeThis.has(parent)
   ) {
     // (parent.node as any).$ctx$ = ctx;
-    runtimeThis.set(parent.node, ctx);
+    runtimeThis.set(parent, ctx);
     // parent.scope.declareConst(THIS, obj);
   }
 }
