@@ -5,7 +5,7 @@
 
 ## Specification
 
-https://tc39.es/ecma262
+https://www.ecma-international.org/wp-content/uploads/ECMA-262_5th_edition_december_2009.pdf
 
 ## 支持能力
 
