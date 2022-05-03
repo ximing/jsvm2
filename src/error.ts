@@ -25,3 +25,13 @@ export function ErrIsNotFunction(name: string): ReferenceError {
 export function ErrCanNotReadProperty(property: string, target: string): ReferenceError {
   return new TypeError(`[jsvm] Cannot read property '${property}' of ${target}`);
 }
+
+
+export function ErrCanNotSetProperty(
+  property: string,
+  target: string
+): ReferenceError {
+  return new TypeError(
+    `[jsvm] Cannot set property  '${property}' of ${target}.`
+  );
+}

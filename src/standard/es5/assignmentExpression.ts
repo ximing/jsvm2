@@ -1,5 +1,5 @@
 import * as types from '@babel/types';
-import { ErrNotDefined } from '../../error';
+import { ErrCanNotSetProperty, ErrNotDefined } from '../../error';
 
 import { Path } from '../../path';
 import { Kind, Var } from '../../var';
@@ -62,7 +62,7 @@ export const AssignmentExpressionMap = {
 };
 
 export function AssignmentExpression(path: Path<types.AssignmentExpression>) {
-  const { node, scope, ctx } = path;
+  const { node, scope, ctx, stack } = path;
   // @ts-ignore
   let $var: Var = {
     kind: Kind.var,
@@ -155,6 +155,16 @@ export function AssignmentExpression(path: Path<types.AssignmentExpression>) {
         // } else {
         //   object[property] = value;
         // }
+        // eslint-disable-next-line
+        if (object == null) {
+          throw overrideStack(
+            ErrCanNotSetProperty(property, typeof object),
+            stack,
+            node
+          );
+        } else {
+          object[property] = value;
+        }
         object[property] = value;
       },
       get value() {
