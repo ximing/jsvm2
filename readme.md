@@ -7,7 +7,13 @@
 
 https://www.ecma-international.org/wp-content/uploads/ECMA-262_5th_edition_december_2009.pdf
 
-## 支持能力
+## 使用方法
+```bash
+npm i -S jsvm2
+```
+参考 [__tests__/helper.ts](__tests__/helper.ts)
+
+## 语法支持情况
 
 注：引擎表现为严格模式
 
