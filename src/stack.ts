@@ -3,7 +3,7 @@ import { SourceLocation } from '@babel/types';
 export interface IPen {
   stack: string;
   filename: string;
-  location: SourceLocation | null;
+  location: SourceLocation | null | undefined;
 }
 
 export class Stack {

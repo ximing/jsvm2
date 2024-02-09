@@ -4,7 +4,7 @@ export enum Kind {
   const = 'const',
 }
 
-export type KindType = 'var' | 'let' | 'const';
+export type KindType = "var" | "let" | "const" | "using" | "await using";
 
 export class Var<T = any> {
   constructor(public kind: Kind | KindType, public name: string, private val: T) {}

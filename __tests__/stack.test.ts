@@ -5,7 +5,7 @@ describe('stack', function () {
   it('method', function () {
     const stack = new Stack(10);
     stack.enter(`fnName`);
-    const pen = {
+    const pen :any = {
       filename: ANONYMOUS,
       stack: stack.currentStackName,
       location: {
