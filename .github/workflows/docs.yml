@@ -13,6 +13,8 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
+  deployments: write
 
 concurrency:
   group: "pages"
@@ -47,6 +49,9 @@ jobs:
       - name: 构建文档
         run: pnpm run build
 
+      - name: 配置 Pages
+        uses: actions/configure-pages@v4
+
       - name: 上传构建产物
         uses: actions/upload-pages-artifact@v3
         with:
@@ -58,6 +63,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: 部署到 GitHub Pages
         id: deployment
