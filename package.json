@@ -12,7 +12,10 @@
     "test:debug": "npx --node-arg=--inspect-brk jest -i",
     "babel": "babel --config-file babel.config.js ./babel/src --out-dir ./babel/result",
     "typecheck": "tsc --project tsconfig.json --noEmit #",
-    "report-coverage": "cat ./coverage/lcov.info | coveralls"
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
+    "docs:dev": "cd docs && npm start",
+    "docs:build": "cd docs && npm run build",
+    "docs:install": "cd docs && npm install"
   },
   "keywords": [],
   "author": "ximing",
