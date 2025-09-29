@@ -10,12 +10,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
+  deployments: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -24,8 +29,6 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 设置 pnpm
         uses: pnpm/action-setup@v4
@@ -45,9 +48,27 @@ jobs:
       - name: 构建文档
         run: pnpm run build
 
-      - name: 部署到 GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: 上传构建产物
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build
-          force_orphan: true
+          path: ./docs/build
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+      deployments: write
+    steps:
+      - name: 配置 Pages
+        uses: actions/configure-pages@v4
+        with:
+          enablement: true
+
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
