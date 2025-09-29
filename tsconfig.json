@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2020",
     "module": "commonjs",
     "declaration": true,
     "removeComments": false,
@@ -9,13 +9,15 @@
     "experimentalDecorators": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "outDir": "lib",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "lib": ["es2015"]
+    "importHelpers": true,
+    "lib": ["es2020"]
   },
   "include": ["src"],
   "exclude": ["__tests__", "node_modules", "lib", "tests", "jest"],

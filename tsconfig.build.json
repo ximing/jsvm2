@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "skipLibCheck": true,
-    "target": "ES5",
+    "target": "ES2020",
     "module": "ESNext",
     "declaration": true,
     "removeComments": false,
@@ -11,12 +11,14 @@
     "experimentalDecorators": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "lib": ["es2015"]
+    "importHelpers": true,
+    "lib": ["es2020"]
   },
   "include": ["src"],
   "compileOnSave": false
