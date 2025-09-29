@@ -1,0 +1,78 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/jsvm2/docs",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/jsvm2/docs",
+          "mainDocId": "intro",
+          "docs": [
+            {
+              "id": "api/context",
+              "path": "/jsvm2/docs/api/context",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/overview",
+              "path": "/jsvm2/docs/api/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/scope",
+              "path": "/jsvm2/docs/api/scope",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/vm",
+              "path": "/jsvm2/docs/api/vm",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "getting-started/basic-usage",
+              "path": "/jsvm2/docs/getting-started/basic-usage",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "getting-started/examples",
+              "path": "/jsvm2/docs/getting-started/examples",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "getting-started/installation",
+              "path": "/jsvm2/docs/getting-started/installation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "intro",
+              "path": "/jsvm2/docs/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "language-support/es2015",
+              "path": "/jsvm2/docs/language-support/es2015",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "language-support/es5",
+              "path": "/jsvm2/docs/language-support/es5",
+              "sidebar": "tutorialSidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "tutorialSidebar": {
+              "link": {
+                "path": "/jsvm2/docs/intro",
+                "label": "intro"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

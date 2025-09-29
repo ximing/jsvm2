@@ -1,0 +1,27 @@
+{
+  "id": "api/vm",
+  "title": "VM API",
+  "description": "虚拟机 API 是 JSVM2 的核心接口，提供了代码执行的主要功能。",
+  "source": "@site/docs/api/vm.md",
+  "sourceDirName": "api",
+  "slug": "/api/vm",
+  "permalink": "/jsvm2/docs/api/vm",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ximing/jsvm2/tree/master/docs/docs/api/vm.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "API 概览",
+    "permalink": "/jsvm2/docs/api/overview"
+  },
+  "next": {
+    "title": "Context API",
+    "permalink": "/jsvm2/docs/api/context"
+  }
+}

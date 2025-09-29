@@ -1,0 +1,27 @@
+{
+  "id": "api/scope",
+  "title": "Scope API",
+  "description": "Scope 类管理 JSVM2 中的变量作用域和绑定关系。",
+  "source": "@site/docs/api/scope.md",
+  "sourceDirName": "api",
+  "slug": "/api/scope",
+  "permalink": "/jsvm2/docs/api/scope",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ximing/jsvm2/tree/master/docs/docs/api/scope.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Context API",
+    "permalink": "/jsvm2/docs/api/context"
+  },
+  "next": {
+    "title": "ES5 语法支持",
+    "permalink": "/jsvm2/docs/language-support/es5"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "getting-started/examples",
+  "title": "使用示例",
+  "description": "本节提供了 JSVM2 在各种实际场景中的使用示例。",
+  "source": "@site/docs/getting-started/examples.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/examples",
+  "permalink": "/jsvm2/docs/getting-started/examples",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ximing/jsvm2/tree/master/docs/docs/getting-started/examples.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "基础用法",
+    "permalink": "/jsvm2/docs/getting-started/basic-usage"
+  },
+  "next": {
+    "title": "API 概览",
+    "permalink": "/jsvm2/docs/api/overview"
+  }
+}

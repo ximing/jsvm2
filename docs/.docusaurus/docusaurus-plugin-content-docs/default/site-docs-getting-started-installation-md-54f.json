@@ -1,0 +1,27 @@
+{
+  "id": "getting-started/installation",
+  "title": "安装",
+  "description": "JSVM2 可以通过 npm 或 yarn 安装，支持 Node.js 和浏览器环境。",
+  "source": "@site/docs/getting-started/installation.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/installation",
+  "permalink": "/jsvm2/docs/getting-started/installation",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ximing/jsvm2/tree/master/docs/docs/getting-started/installation.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "介绍",
+    "permalink": "/jsvm2/docs/intro"
+  },
+  "next": {
+    "title": "基础用法",
+    "permalink": "/jsvm2/docs/getting-started/basic-usage"
+  }
+}

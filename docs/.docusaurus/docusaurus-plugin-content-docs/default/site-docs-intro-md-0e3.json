@@ -1,0 +1,23 @@
+{
+  "id": "intro",
+  "title": "介绍",
+  "description": "JSVM2 是一个基于 JavaScript 实现的 JavaScript 解释器，它提供了一个完全隔离的沙箱环境来执行 JavaScript 代码。",
+  "source": "@site/docs/intro.md",
+  "sourceDirName": ".",
+  "slug": "/intro",
+  "permalink": "/jsvm2/docs/intro",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ximing/jsvm2/tree/master/docs/docs/intro.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "next": {
+    "title": "安装",
+    "permalink": "/jsvm2/docs/getting-started/installation"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "getting-started/basic-usage",
+  "title": "基础用法",
+  "description": "本节将介绍 JSVM2 的基本使用方法，包括如何执行代码、创建沙箱环境以及处理执行结果。",
+  "source": "@site/docs/getting-started/basic-usage.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/basic-usage",
+  "permalink": "/jsvm2/docs/getting-started/basic-usage",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ximing/jsvm2/tree/master/docs/docs/getting-started/basic-usage.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "安装",
+    "permalink": "/jsvm2/docs/getting-started/installation"
+  },
+  "next": {
+    "title": "使用示例",
+    "permalink": "/jsvm2/docs/getting-started/examples"
+  }
+}

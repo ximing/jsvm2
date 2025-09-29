@@ -1,0 +1,27 @@
+{
+  "id": "api/context",
+  "title": "Context API",
+  "description": "Context 类提供了代码执行的沙箱环境，包含所有可访问的全局对象和变量。",
+  "source": "@site/docs/api/context.md",
+  "sourceDirName": "api",
+  "slug": "/api/context",
+  "permalink": "/jsvm2/docs/api/context",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ximing/jsvm2/tree/master/docs/docs/api/context.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "VM API",
+    "permalink": "/jsvm2/docs/api/vm"
+  },
+  "next": {
+    "title": "Scope API",
+    "permalink": "/jsvm2/docs/api/scope"
+  }
+}

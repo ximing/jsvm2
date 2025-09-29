@@ -1,0 +1,27 @@
+{
+  "id": "language-support/es5",
+  "title": "ES5 语法支持",
+  "description": "JSVM2 完整支持 ECMAScript 5 规范中定义的所有语法特性。",
+  "source": "@site/docs/language-support/es5.md",
+  "sourceDirName": "language-support",
+  "slug": "/language-support/es5",
+  "permalink": "/jsvm2/docs/language-support/es5",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ximing/jsvm2/tree/master/docs/docs/language-support/es5.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Scope API",
+    "permalink": "/jsvm2/docs/api/scope"
+  },
+  "next": {
+    "title": "ES2015+ 语法支持",
+    "permalink": "/jsvm2/docs/language-support/es2015"
+  }
+}
